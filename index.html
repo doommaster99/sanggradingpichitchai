@@ -1,0 +1,1208 @@
+<title>สั่นกระดิ่งพิชิตชัย</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: glass dashboard on a soft mesh gradient. Setup = hero, KPI row, mode cards, start card + question-set insight card.
+   Game = glass HUD, question card, status pill, answer tiles, bell pads. Everything is built from the tokens below. */
+:root{
+  --font-display:'Noto Sans Thai','Sarabun',system-ui,sans-serif;
+  --font-body:'Sarabun','Noto Sans Thai',system-ui,sans-serif;
+  --bg:#EEF1FF; --blob1:#C7D2FE; --blob2:#FBCFE8; --blob3:#A5F3FC;
+  --ink:#0F172A; --ink-2:#475569; --line:rgba(99,102,241,.18); --fill:rgba(99,102,241,.09);
+  --glass:rgba(255,255,255,.60); --glass-2:rgba(255,255,255,.82); --glass-solid:rgba(255,255,255,.90); --glass-brd:rgba(255,255,255,.80);
+  --shadow:0 14px 40px -16px rgba(67,56,202,.32), 0 2px 8px rgba(15,23,42,.05);
+  --shadow-lg:0 26px 60px -18px rgba(67,56,202,.42), 0 4px 14px rgba(15,23,42,.07);
+  --accent:#4F46E5; --accent-ink:#FFFFFF;
+  --grad:linear-gradient(135deg,#4F46E5 0%,#7C3AED 55%,#DB2777 100%);
+  --grad-gold:linear-gradient(135deg,#FCD34D,#F59E0B 55%,#F97316); --gold-ink:#422006;
+  --good:#047857; --good-bg:rgba(16,185,129,.16); --bad:#BE123C; --bad-bg:rgba(244,63,94,.14);
+  --lv-e:#10B981; --lv-m:#F59E0B; --lv-h:#F43F5E;
+  --p1:#3B6CF0; --p2:#E0700F; --p3:#E0364F; --p4:#475569; --p5:#0E9F6E; --p6:#8250F0;
+  --r:1.75rem; --ease:cubic-bezier(.22,.8,.3,1);
+  --scale:1; font-size:calc(16px * var(--scale));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#080C20; --blob1:rgba(79,70,229,.55); --blob2:rgba(190,24,93,.38); --blob3:rgba(14,116,144,.50);
+    --ink:#EAEEFF; --ink-2:#A8B4D6; --line:rgba(165,180,252,.20); --fill:rgba(165,180,252,.10);
+    --glass:rgba(255,255,255,.07); --glass-2:rgba(255,255,255,.12); --glass-solid:rgba(22,28,64,.90); --glass-brd:rgba(255,255,255,.14);
+    --shadow:0 16px 44px -16px rgba(0,0,0,.65), 0 2px 8px rgba(0,0,0,.25);
+    --shadow-lg:0 28px 64px -18px rgba(0,0,0,.75), 0 4px 14px rgba(0,0,0,.3);
+    --accent:#A5B4FC; --accent-ink:#0B1030;
+    --good:#34D399; --good-bg:rgba(16,185,129,.20); --bad:#FB7185; --bad-bg:rgba(244,63,94,.20);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#080C20; --blob1:rgba(79,70,229,.55); --blob2:rgba(190,24,93,.38); --blob3:rgba(14,116,144,.50);
+  --ink:#EAEEFF; --ink-2:#A8B4D6; --line:rgba(165,180,252,.20); --fill:rgba(165,180,252,.10);
+  --glass:rgba(255,255,255,.07); --glass-2:rgba(255,255,255,.12); --glass-solid:rgba(22,28,64,.90); --glass-brd:rgba(255,255,255,.14);
+  --shadow:0 16px 44px -16px rgba(0,0,0,.65), 0 2px 8px rgba(0,0,0,.25);
+  --shadow-lg:0 28px 64px -18px rgba(0,0,0,.75), 0 4px 14px rgba(0,0,0,.3);
+  --accent:#A5B4FC; --accent-ink:#0B1030;
+  --good:#34D399; --good-bg:rgba(16,185,129,.20); --bad:#FB7185; --bad-bg:rgba(244,63,94,.20);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--ink); font:400 1rem/1.55 var(--font-body);
+  background:
+    radial-gradient(62rem 40rem at 6% -10%, var(--blob1), transparent 62%),
+    radial-gradient(52rem 36rem at 102% 2%, var(--blob2), transparent 58%),
+    radial-gradient(58rem 42rem at 55% 118%, var(--blob3), transparent 62%),
+    var(--bg);
+  background-attachment:fixed;
+  padding-block:12px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  -webkit-tap-highlight-color:transparent;
+}
+button{font:inherit; color:inherit}
+svg{flex:none}
+kbd{font:700 .7rem/1 var(--font-body); padding:.25em .5em; border-radius:.5rem; background:var(--fill); border:1px solid var(--line); opacity:.85}
+@media (hover:none){ kbd{display:none} }
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+
+#app{height:100%; display:flex; flex-direction:column; gap:14px; max-width:1500px; margin:0 auto}
+#screen{flex:1; min-height:0; overflow:auto; padding:6px 6px 18px; scrollbar-gutter:stable}
+.glass{background:var(--glass); backdrop-filter:blur(18px) saturate(160%); -webkit-backdrop-filter:blur(18px) saturate(160%);
+  border:1px solid var(--glass-brd); border-radius:var(--r); box-shadow:var(--shadow)}
+
+/* header */
+.bar{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:.3rem .2rem}
+.brand{display:flex; align-items:center; gap:.75rem; font:800 1.3rem/1 var(--font-display)}
+.brand .mark{display:grid; place-items:center; width:2.6rem; height:2.6rem; border-radius:1rem; background:var(--grad); color:#fff; box-shadow:0 8px 20px -6px rgba(124,58,237,.6)}
+.brand .mark svg{width:1.4rem; height:1.4rem}
+.tools{display:flex; gap:.5rem; flex-wrap:wrap}
+.ibtn{display:inline-flex; align-items:center; justify-content:center; gap:.45rem; min-width:2.8rem; height:2.8rem; padding:0 .9rem; cursor:pointer;
+  background:var(--glass); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid var(--glass-brd); border-radius:1rem; box-shadow:var(--shadow);
+  font:700 .92rem/1 var(--font-display); transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s}
+.ibtn svg{width:1.2rem; height:1.2rem}
+.ibtn:hover{transform:translateY(-2px); box-shadow:var(--shadow-lg); background:var(--glass-2)}
+.ibtn:active{transform:translateY(0) scale(.97)}
+
+/* buttons / form */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:.55rem; padding:.7em 1.25em; cursor:pointer;
+  font:700 1rem/1.2 var(--font-display); color:var(--ink); background:var(--glass-2); border:1px solid var(--glass-brd); border-radius:1.1rem; box-shadow:var(--shadow);
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease), filter .25s}
+.btn svg{width:1.2em; height:1.2em}
+.btn:hover{transform:translateY(-2px); box-shadow:var(--shadow-lg)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn.primary{background:var(--grad); color:#fff; border-color:transparent; box-shadow:0 14px 30px -10px rgba(124,58,237,.65)}
+.btn.primary:hover{filter:brightness(1.08); box-shadow:0 20px 38px -10px rgba(124,58,237,.75)}
+.btn.gold{background:var(--grad-gold); color:var(--gold-ink); border-color:transparent; box-shadow:0 14px 30px -10px rgba(245,158,11,.6)}
+.btn.small{padding:.5em 1em; font-size:.92rem; border-radius:.95rem}
+.btn.big{font-size:1.3rem; padding:.85em 1.6em; flex:1}
+.chip{display:inline-flex; align-items:center; padding:.4em 1em; min-height:2.4rem; cursor:pointer; background:var(--fill); border:1px solid var(--line); border-radius:999px;
+  font:700 .92rem/1.1 var(--font-display); transition:transform .2s var(--ease), background .2s, box-shadow .2s}
+.chip:hover{transform:translateY(-1px); background:var(--glass-2)}
+.chip.on{background:var(--grad); color:#fff; border-color:transparent; box-shadow:0 8px 18px -8px rgba(124,58,237,.7)}
+.chip:disabled{opacity:.4; cursor:not-allowed; transform:none}
+.numin,.txtin,.txtarea{background:var(--glass-2); color:var(--ink); border:1px solid var(--line); border-radius:.95rem; font:600 1rem var(--font-body); transition:border-color .2s, box-shadow .2s}
+.numin{width:6rem; height:2.5rem; padding:0 .7rem}
+.txtin{flex:1; min-width:0; height:2.7rem; padding:0 .9rem}
+.txtarea{width:100%; min-height:7rem; padding:.7rem .9rem; font-weight:500; font-size:.95rem; line-height:1.45; resize:vertical}
+.numin:focus,.txtin:focus,.txtarea:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 4px var(--fill)}
+.row{display:flex; flex-direction:column; gap:.55rem}
+.row>label,.row>.lb{font:700 1rem/1.3 var(--font-display)}
+.row>.txtin{flex:none; width:100%}
+.row .hint{font-size:.88rem; color:var(--ink-2)}
+.chips{display:flex; flex-wrap:wrap; gap:.5rem; align-items:center}
+.names{display:grid; gap:.55rem}
+.nrow{display:flex; align-items:center; gap:.6rem}
+.sw{display:grid; place-items:center; width:2.7rem; height:2.7rem; flex:none; border-radius:1rem; background:var(--pc); font-size:1.4rem; box-shadow:0 8px 18px -8px var(--pc)}
+[data-mode="solo"] .only-bell,[data-mode="bell"] .only-solo{display:none}
+
+/* setup dashboard */
+.dash{display:grid; gap:1.25rem; max-width:74rem; margin:0 auto; grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
+  grid-template-areas:"hero hero" "kpi kpi" "modes modes"}
+.dash>*{animation:rise .6s var(--ease) both}
+.dash>:nth-child(2){animation-delay:.06s} .dash>:nth-child(3){animation-delay:.12s} .dash>:nth-child(4){animation-delay:.18s} .dash>:nth-child(5){animation-delay:.24s}
+.hero{grid-area:hero; position:relative; overflow:hidden; padding:clamp(1.5rem,3.4vw,2.8rem)}
+.hero::before{content:""; position:absolute; right:-6rem; top:-7rem; width:22rem; height:22rem; border-radius:50%; background:var(--grad); opacity:.22; filter:blur(50px); pointer-events:none}
+.hero>*{position:relative}
+.eyebrow{display:inline-flex; align-items:center; gap:.5rem; padding:.4em 1em; border-radius:999px; background:var(--fill); border:1px solid var(--line); color:var(--accent); font:700 .9rem/1.3 var(--font-display)}
+.eyebrow svg{width:1.1rem; height:1.1rem}
+h1{margin:1rem 0 0; font:800 clamp(2.4rem,6vw,4.4rem)/1.15 var(--font-display); text-wrap:balance; color:var(--accent);
+  background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+.lead{margin:1rem 0 0; max-width:40rem; font-size:1.15rem; color:var(--ink-2)}
+.feats{display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.4rem}
+.feats span{display:inline-flex; align-items:center; gap:.5rem; padding:.45em 1em; border-radius:999px; background:var(--glass-2); border:1px solid var(--glass-brd); font:600 .92rem var(--font-body)}
+.feats svg{width:1.1rem; height:1.1rem; color:var(--accent)}
+.kpis{grid-area:kpi; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1.1rem}
+.kpi{display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:.9rem; padding:1.1rem 1.2rem; text-align:left; cursor:pointer; transition:transform .3s var(--ease), box-shadow .3s var(--ease)}
+.kpi:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg)}
+.ico{display:grid; place-items:center; width:2.9rem; height:2.9rem; border-radius:1.05rem; background:var(--grad); color:#fff; box-shadow:0 10px 22px -8px rgba(124,58,237,.6)}
+.ico svg{width:1.4rem; height:1.4rem}
+.kpi .ico{grid-row:1 / span 2}
+.kl{font:600 .85rem/1.2 var(--font-body); color:var(--ink-2)}
+.kpi b{font:800 1.35rem/1.25 var(--font-display); overflow-wrap:anywhere}
+.modes{grid-area:modes; display:grid; grid-template-columns:1fr 1fr; gap:1.1rem}
+.mode{position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:.5rem; padding:1.3rem; text-align:left; cursor:pointer; border:2px solid transparent;
+  transition:transform .3s var(--ease), box-shadow .3s var(--ease), background .3s}
+.mode:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg)}
+.mode .ic{display:grid; place-items:center; width:3.2rem; height:3.2rem; border-radius:1.1rem; background:var(--fill); color:var(--accent)}
+.mode .ic svg{width:1.6rem; height:1.6rem}
+.mode b{font:800 1.3rem/1.2 var(--font-display)}
+.mode .d{font-size:.95rem; color:var(--ink-2)}
+.mode .tick{position:absolute; right:1rem; top:1rem; display:grid; place-items:center; width:1.8rem; height:1.8rem; border-radius:50%; background:var(--grad); color:#fff; opacity:0; transform:scale(.4); transition:.3s var(--ease)}
+.mode .tick svg{width:1rem; height:1rem; stroke-width:3}
+.mode.on{background:linear-gradient(var(--glass-solid),var(--glass-solid)) padding-box, var(--grad) border-box; box-shadow:var(--shadow-lg)}
+.mode.on .ic{background:var(--grad); color:#fff}
+.mode.on .tick{opacity:1; transform:scale(1)}
+.startc{grid-area:start; display:flex; flex-direction:column; gap:1rem; padding:1.3rem}
+.summary{margin:0; color:var(--ink-2); font-size:.95rem}
+.startrow{display:flex; gap:.8rem; flex-wrap:wrap}
+.setc{grid-area:set; display:flex; flex-direction:column; gap:1rem; padding:1.4rem}
+.setc-h{display:flex; align-items:center; gap:.9rem}
+.setc-h h2{margin:0; font:800 1.25rem/1.3 var(--font-display); overflow-wrap:anywhere}
+.bigno{display:flex; align-items:baseline; gap:.5rem}
+.bigno b{font:800 3.4rem/1 var(--font-display); color:var(--accent)}
+.bigno span{font:700 1.1rem var(--font-display); color:var(--ink-2)}
+.lvbar{display:flex; height:.9rem; border-radius:999px; overflow:hidden; background:var(--fill)}
+.lvbar i{display:block; height:100%; transition:width .5s var(--ease)} .lvbar i+i{margin-left:2px}
+.lvbar .e,.legend .e{background:var(--lv-e)} .lvbar .m,.legend .m{background:var(--lv-m)} .lvbar .h,.legend .h{background:var(--lv-h)}
+.legend{display:flex; flex-wrap:wrap; gap:.4rem 1.1rem; margin:0; padding:0; list-style:none; font-size:.92rem; color:var(--ink-2)}
+.legend li{display:inline-flex; align-items:center; gap:.4rem} .legend i{width:.7rem; height:.7rem; border-radius:50%} .legend b{color:var(--ink)}
+.tcs{display:flex; flex-wrap:wrap; gap:.45rem}
+.tc{padding:.3em .85em; border-radius:999px; background:var(--fill); border:1px solid var(--line); font:600 .88rem var(--font-body)}
+.tc b{color:var(--accent)}
+
+/* game */
+.game{height:100%; display:flex; flex-direction:column; gap:.9rem; min-height:0}
+.hud{display:flex; align-items:center; gap:1.4rem; flex-wrap:wrap; padding:.85rem 1.2rem}
+.hq,.ht{display:flex; align-items:center; gap:.8rem}
+.hico{display:grid; place-items:center; width:2.7rem; height:2.7rem; border-radius:1rem; background:var(--grad); color:#fff; flex:none}
+.hico svg{width:1.4rem; height:1.4rem}
+.hud .lbl{display:block; font:600 .8rem/1.2 var(--font-body); color:var(--ink-2)}
+.hq b{font:800 2rem/1 var(--font-display)} .hq .of{font:700 1.1rem var(--font-display); color:var(--ink-2); margin-left:.3rem}
+.ht{flex:1; min-width:13rem}
+.htb{display:flex; flex-direction:column; min-width:4.6rem}
+.ht b{font:800 2rem/1 var(--font-display); font-variant-numeric:tabular-nums}
+.tbar{flex:1; min-width:4rem; height:.8rem; border-radius:999px; background:var(--fill); overflow:hidden}
+.tbar i{display:block; height:100%; width:100%; background:var(--grad); border-radius:inherit; transition:width .2s linear}
+.ht.low b{color:var(--bad)} .ht.low .tbar i{background:var(--lv-h)} .ht.low{animation:blink 1s steps(2,jump-none) infinite}
+.keyhint{font-size:.85rem; color:var(--ink-2)}
+.stage{flex:1; min-height:0; overflow:auto; display:flex; flex-direction:column; gap:.85rem; padding:2px 4px 10px; position:relative}
+.qcard{padding:1.4rem 1.6rem; animation:rise .45s var(--ease) both}
+.tags{display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:.7rem}
+.tag{padding:.15em .85em; border-radius:999px; font:700 .85rem/1.6 var(--font-display); background:var(--fill); border:1px solid var(--line)}
+.tag.d-e{background:var(--good-bg); color:var(--good)} .tag.d-m{background:rgba(245,158,11,.18); color:#B45309} .tag.d-h{background:var(--bad-bg); color:var(--bad)}
+:root[data-theme="dark"] .tag.d-m{color:#FCD34D}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .tag.d-m{color:#FCD34D} }
+.qtext{margin:0; font:800 clamp(1.4rem,3vw,2.5rem)/1.4 var(--font-display); text-wrap:pretty}
+.ready{display:none; text-align:center; padding:1rem 0}
+.ready b{display:block; font:800 clamp(4.5rem,15vw,9.5rem)/1 var(--font-display); color:var(--accent); animation:pop .5s var(--ease)}
+.ready span{font:700 1.4rem var(--font-display); color:var(--ink-2)}
+.game[data-phase="ready"] .ready{display:block}
+.game[data-phase="ready"] .qcard,.game[data-phase="ready"] .choices,.game[data-phase="ready"] .status{display:none}
+.status{position:relative; display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:5.2rem; padding:.7rem 1.2rem; overflow:hidden; transition:background .3s, border-color .3s}
+.st-main{display:flex; flex-direction:column; min-width:0}
+.st-main .big{display:flex; align-items:center; gap:.6rem; font:800 clamp(1.15rem,2.2vw,1.7rem)/1.3 var(--font-display)}
+.st-main .big svg{width:1.5em; height:1.5em}
+.st-main .sub{font-size:.95rem; color:var(--ink-2)}
+.status.s-question .big svg{color:var(--lv-m)}
+.status.s-answering{background:var(--grad-gold); color:var(--gold-ink); border-color:transparent}
+.status.s-answering .sub{color:inherit; opacity:.85}
+.status.s-correct{background:var(--good-bg); border-color:var(--good)} .status.s-correct .big{color:var(--good)}
+.status.s-wrong,.status.s-timeout{background:var(--bad-bg); border-color:var(--bad)} .status.s-wrong .big,.status.s-timeout .big{color:var(--bad)}
+.ring{position:relative; width:4.5rem; height:4.5rem; flex:none}
+.ring svg{width:100%; height:100%; transform:rotate(-90deg)}
+.ring circle{fill:none; stroke-width:9}
+.ring .bgc{stroke:rgba(66,32,6,.18)} .ring .fgc{stroke:var(--gold-ink); stroke-linecap:round}
+.ring b{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font:800 2.1rem var(--font-display)}
+.ring.hot .fgc{stroke:var(--bad)} .ring.hot b{color:var(--bad)}
+.fbbar{position:absolute; left:0; right:0; bottom:0; height:5px; background:var(--fill)}
+.fbbar i{display:block; height:100%; width:100%; background:var(--grad)}
+.choices{display:grid; grid-template-columns:1fr 1fr; gap:.85rem}
+.choice{display:flex; align-items:center; gap:.9rem; padding:.9rem 1.1rem; min-height:4.4rem; text-align:left; cursor:default;
+  background:var(--glass-2); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid var(--glass-brd); border-radius:1.4rem; box-shadow:var(--shadow);
+  font:700 clamp(1.05rem,1.8vw,1.5rem)/1.35 var(--font-display); transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s, opacity .3s}
+.choice .lab{display:grid; place-items:center; flex:none; width:2.6rem; height:2.6rem; border-radius:50%; background:var(--fill); border:1px solid var(--line); color:var(--accent); font:800 1.1rem var(--font-display); transition:.25s}
+.choice .txt{flex:1; min-width:0; overflow-wrap:anywhere}
+.choices[data-active="true"] .choice{cursor:pointer}
+.choices[data-active="true"] .choice:hover{transform:translateY(-3px); box-shadow:var(--shadow-lg); background:var(--glass-solid)}
+.choices[data-active="true"] .choice:hover .lab{background:var(--grad); color:#fff}
+.choices[data-active="true"] .choice:active{transform:scale(.98)}
+.choice.correct{background:var(--good-bg); border-color:var(--good)} .choice.correct .lab{background:var(--good); color:#fff; border-color:var(--good)}
+.choice.wrong{background:var(--bad-bg); border-color:var(--bad)} .choice.wrong .lab{background:var(--bad); color:#fff; border-color:var(--bad)}
+.choice.dim{opacity:.5}
+.explain{padding:1rem 1.3rem; background:var(--glass); border:1px dashed var(--line); border-radius:1.4rem; font-size:1.08rem; animation:rise .4s var(--ease) both}
+.explain p{margin:.3rem 0 0; color:var(--ink-2)}
+.explain[hidden]{display:none}
+.pads{display:grid; grid-template-columns:repeat(var(--n),minmax(0,1fr)); gap:.9rem}
+.pad{position:relative; display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto 1fr; align-items:center; column-gap:.65rem; row-gap:.1rem; overflow:hidden;
+  min-height:clamp(6.4rem,17vh,9.5rem); padding:.8rem 1rem; text-align:left; cursor:pointer; touch-action:manipulation; user-select:none; -webkit-user-select:none;
+  color:#fff; border:1px solid rgba(255,255,255,.35); border-radius:var(--r);
+  background:var(--pc); background:linear-gradient(150deg,var(--pc),color-mix(in srgb,var(--pc) 60%,#0b1020));
+  box-shadow:0 14px 30px -12px rgba(15,23,42,.5); box-shadow:0 16px 34px -12px color-mix(in srgb,var(--pc) 80%,transparent);
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease), filter .2s, opacity .2s}
+.pad:hover{transform:translateY(-3px)}
+.pad:active{transform:scale(.97)}
+.pad .av{font-size:clamp(1.8rem,3.4vw,2.8rem); line-height:1}
+.pad .nm{font:800 clamp(1rem,1.7vw,1.35rem)/1.2 var(--font-display); overflow-wrap:anywhere}
+.pad .sc{grid-column:1 / -1; font:800 clamp(2.2rem,5vw,3.8rem)/1 var(--font-display); font-variant-numeric:tabular-nums}
+.pad .bl{position:absolute; right:.6rem; bottom:.5rem; opacity:.25; transform-origin:50% 10%; pointer-events:none}
+.pad .bl svg{width:clamp(2.6rem,6vw,4.6rem); height:clamp(2.6rem,6vw,4.6rem)}
+.pad kbd{position:absolute; right:.7rem; top:.7rem; color:#fff; background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.4)}
+.pad .rk{position:absolute; right:.7rem; top:.7rem; padding:.1em .7em; background:#FDE68A; color:var(--gold-ink); border-radius:999px; font:800 .9rem/1.5 var(--font-display)}
+.pad .rk:not([hidden])~kbd{top:auto; bottom:.7rem; right:auto; left:1rem}
+.pad .rk[hidden]{display:none}
+.game[data-phase="feedback"] .pad,.game[data-phase="ready"] .pad{cursor:default}
+.game[data-phase="feedback"] .pad:hover,.game[data-phase="ready"] .pad:hover{transform:none}
+.pad.locked{filter:grayscale(1); opacity:.45; cursor:not-allowed; transform:none}
+.pad.winner{outline:4px solid #FCD34D; outline-offset:3px; z-index:1; animation:pop .4s var(--ease)}
+.pad.winner .bl{opacity:.95; animation:ring .5s 3}
+.delta{position:absolute; left:50%; top:30%; transform:translateX(-50%); padding:.05em .7em; border-radius:999px; font:800 clamp(1.5rem,3vw,2.4rem)/1.3 var(--font-display); pointer-events:none; animation:floatup 1.4s forwards; z-index:3; box-shadow:var(--shadow)}
+.delta.up{background:#D1FAE5; color:#047857} .delta.down{background:#FFE4E6; color:#BE123C}
+.tiles{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.9rem}
+.tile{position:relative; display:flex; align-items:center; gap:.9rem; padding:.9rem 1.2rem}
+.tile .tt{display:flex; flex-direction:column}
+.tile span.tl{font:600 .88rem var(--font-body); color:var(--ink-2)}
+.tile b{font:800 clamp(2rem,4.5vw,3.2rem)/1.1 var(--font-display); font-variant-numeric:tabular-nums}
+.tile.score{background:var(--grad-gold); color:var(--gold-ink); border-color:transparent} .tile.score .tl{color:inherit} .tile.score .ico{background:rgba(255,255,255,.55); color:var(--gold-ink); box-shadow:none}
+.tile .delta{top:10%}
+.game.paused .qcard,.game.paused .choices{filter:blur(14px)}
+.game[data-mode="solo"] .pads{display:none}
+.game[data-mode="bell"] .tiles{display:none}
+
+#fxflash{position:fixed; inset:0; pointer-events:none; z-index:40; opacity:0; background:radial-gradient(circle at 50% 50%, transparent 45%, var(--fx,#fff) 140%)}
+#fxflash.go{animation:flash .6s ease-out}
+.shake{animation:shake .45s}
+#fx{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:60}
+#ov{position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(15,23,42,.38); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); animation:fade .25s both}
+#ov[hidden]{display:none}
+.dlg{width:min(34rem,100%); max-height:100%; overflow:auto; display:flex; flex-direction:column; gap:1.1rem; padding:1.6rem; background:var(--glass-solid); box-shadow:var(--shadow-lg); animation:rise .35s var(--ease) both}
+.dlg.wide{width:min(46rem,100%)}
+.dlg h2{display:flex; align-items:center; gap:.6rem; margin:0; font:800 1.6rem/1.25 var(--font-display)}
+.dlg h2 svg{width:1.5rem; height:1.5rem; color:var(--accent)}
+.dlg p{margin:0; color:var(--ink-2)}
+.dlg .acts{display:flex; flex-wrap:wrap; gap:.7rem}
+.dlg .acts .btn{flex:1 1 10rem}
+#toast{position:fixed; left:50%; bottom:max(20px, env(safe-area-inset-bottom, 0px)); transform:translate(-50%,20px); z-index:70; max-width:min(90vw,32rem); padding:.7rem 1.2rem; background:var(--ink); color:var(--bg); border-radius:1rem; font-weight:700; opacity:0; pointer-events:none; transition:.25s}
+#toast.on{opacity:1; transform:translate(-50%,0)}
+.sets{display:flex; flex-direction:column; gap:.55rem}
+.setrow{display:flex; gap:.5rem; align-items:stretch}
+.setpick{flex:1; min-width:0; display:flex; flex-direction:column; text-align:left; padding:.65rem .95rem; cursor:pointer; background:var(--glass-2); border:1px solid var(--line); border-radius:1.1rem; transition:transform .2s var(--ease), box-shadow .2s}
+.setpick:hover{transform:translateY(-2px); box-shadow:var(--shadow)}
+.setrow.on .setpick{background:var(--grad); color:#fff; border-color:transparent}
+.setpick small{opacity:.8}
+.rep{padding:.8rem 1rem; border-radius:1.1rem; border:1px solid var(--line); background:var(--fill); font-size:.95rem}
+.rep.ok{background:var(--good-bg)} .rep.bad{background:var(--bad-bg)}
+.rep ul{margin:.4rem 0 0; padding-left:1.2rem}
+
+/* results */
+.result{display:flex; flex-direction:column; gap:1.2rem; max-width:62rem; margin:0 auto}
+.result>*{animation:rise .55s var(--ease) both}
+.result>:nth-child(2){animation-delay:.08s} .result>:nth-child(3){animation-delay:.16s} .result>:nth-child(4){animation-delay:.24s}
+.win{position:relative; overflow:hidden; text-align:center; padding:2rem 1rem; color:#fff; background:var(--grad); border-radius:var(--r); box-shadow:var(--shadow-lg)}
+.win::after{content:""; position:absolute; inset:-30% -10% auto auto; width:20rem; height:20rem; border-radius:50%; background:rgba(255,255,255,.16); filter:blur(30px)}
+.win>*{position:relative; z-index:1}
+.win .em{display:inline-grid; place-items:center; width:5rem; height:5rem; border-radius:1.6rem; background:rgba(255,255,255,.22)}
+.win .em svg{width:2.8rem; height:2.8rem}
+.win .lbl{display:block; margin-top:.8rem; font:700 1rem var(--font-body); letter-spacing:.04em; opacity:.9}
+.win h2{margin:.2rem 0 0; font:800 clamp(2rem,6vw,3.6rem)/1.2 var(--font-display); text-wrap:balance}
+.board{display:flex; flex-direction:column; gap:.75rem}
+.rrow{display:grid; grid-template-columns:3rem minmax(0,1fr) auto; align-items:center; gap:.5rem .9rem; padding:.9rem 1.1rem; transition:transform .25s var(--ease)}
+.rrow:hover{transform:translateY(-2px)}
+.rrow.first{border-color:#FCD34D; box-shadow:0 0 0 2px #FCD34D, var(--shadow)}
+.rrow .no{display:grid; place-items:center; width:2.8rem; height:2.8rem; border-radius:50%; background:var(--fill); color:var(--accent); font:800 1.3rem var(--font-display)}
+.rrow.first .no{background:var(--grad-gold); color:var(--gold-ink)}
+.rrow .who{display:flex; align-items:center; gap:.7rem; font:800 1.25rem var(--font-display); min-width:0}
+.rrow .who small{display:block; font:400 .88rem var(--font-body); color:var(--ink-2)}
+.rrow .pt{font:800 2rem var(--font-display); font-variant-numeric:tabular-nums}
+.rrow .barw{grid-column:2 / -1; height:.6rem; border-radius:99px; background:var(--fill); overflow:hidden}
+.rrow .barw i{display:block; height:100%; border-radius:inherit; background:var(--pc)}
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr)); gap:1rem}
+.stat{display:flex; align-items:center; gap:.9rem; padding:1rem 1.2rem}
+.stat .st{display:flex; flex-direction:column}
+.stat .sl{font:600 .88rem var(--font-body); color:var(--ink-2)}
+.stat b{font:800 2rem/1.15 var(--font-display)}
+.msg{margin:0; text-align:center; font:700 1.25rem/1.45 var(--font-display)}
+.panel{padding:1.3rem 1.5rem}
+.panel .pt2{margin:0 0 .8rem; font:800 1.1rem var(--font-display)}
+.topics{display:grid; gap:.7rem}
+.topic{display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:.25rem .8rem}
+.topic .tb{grid-column:1 / -1; height:.65rem; border-radius:99px; background:var(--fill); overflow:hidden}
+.topic .tb i{display:block; height:100%; border-radius:inherit; background:var(--grad)}
+details.rev{padding:.9rem 1.3rem}
+details.rev summary{cursor:pointer; font:800 1.1rem var(--font-display)}
+.ritem{padding:.9rem 0; border-top:1px dashed var(--line)}
+.ritem:first-of-type{margin-top:.7rem}
+.ritem small{display:block; color:var(--ink-2)}
+.pill{display:inline-block; margin-right:.4rem; padding:0 .7em; border-radius:99px; font:700 .85rem/1.7 var(--font-display); color:#fff}
+.pill.correct{background:var(--lv-e)} .pill.wrong,.pill.timeout{background:var(--lv-h)} .pill.skip{background:#64748B}
+.resacts{display:flex; flex-wrap:wrap; gap:.8rem; justify-content:center}
+
+/* SweetAlert2 theme */
+.swal2-container{z-index:1100 !important}
+.swal2-container .swal2-popup.sw-pop{background:var(--glass-solid); color:var(--ink); border:1px solid var(--glass-brd); border-radius:var(--r); box-shadow:var(--shadow-lg);
+  backdrop-filter:blur(24px) saturate(160%); -webkit-backdrop-filter:blur(24px) saturate(160%); font-family:var(--font-body); padding:1.7rem 1.5rem 1.5rem}
+.swal2-container .swal2-popup.sw-toast{border-radius:1.2rem; padding:.7rem 1rem}
+.swal2-container .sw-pop .swal2-title{font:800 1.55rem/1.3 var(--font-display); color:var(--ink)}
+.swal2-container .sw-toast .swal2-title{font:700 1rem/1.4 var(--font-body)}
+.swal2-container .sw-pop .swal2-html-container{color:var(--ink-2); font-size:1.05rem}
+.swal2-container .sw-pop .swal2-actions{gap:.7rem}
+.swal2-container .sw-ok,.swal2-container .sw-no{padding:.7em 1.4em; border:1px solid var(--glass-brd); border-radius:1.1rem; cursor:pointer; font:700 1rem var(--font-display); transition:transform .25s var(--ease), box-shadow .25s}
+.swal2-container .sw-ok{background:var(--grad); color:#fff; border-color:transparent; box-shadow:0 12px 26px -10px rgba(124,58,237,.65)}
+.swal2-container .sw-no{background:var(--glass-2); color:var(--ink)}
+.swal2-container .sw-ok:hover,.swal2-container .sw-no:hover{transform:translateY(-2px)}
+.swal2-container .sw-pop .swal2-timer-progress-bar{background:var(--accent)}
+
+@keyframes rise{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes flash{0%{opacity:.85}100%{opacity:0}}
+@keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-12px)}30%{transform:translateX(10px)}45%{transform:translateX(-8px)}60%{transform:translateX(6px)}80%{transform:translateX(-3px)}}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes ring{0%,100%{transform:rotate(0)}25%{transform:rotate(-22deg)}75%{transform:rotate(22deg)}}
+@keyframes floatup{0%{opacity:0; transform:translate(-50%,10px)}15%{opacity:1}100%{opacity:0; transform:translate(-50%,-60px)}}
+@keyframes blink{50%{opacity:.6}}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition:none !important}
+}
+@media (max-width:900px){
+  .dash{grid-template-columns:minmax(0,1fr); grid-template-areas:"hero" "kpi" "modes"}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:700px){
+  .choices{grid-template-columns:1fr}
+  .pads{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .modes{grid-template-columns:1fr}
+  .tiles{grid-template-columns:1fr 1fr 1fr; gap:.5rem}
+  .tile{flex-direction:column; align-items:flex-start; gap:.4rem; padding:.7rem}
+  .tile .ico{display:none}
+  .brand span.nm2{font-size:1.05rem}
+  .ibtn .tx{display:none}
+  .ibtn{padding:0; width:2.8rem}
+}
+
+/* ===== ภาพพื้นหลัง ===== */
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--bgimg) center/cover no-repeat;pointer-events:none;transition:opacity .4s}
+body[data-bg="home"]{--bgimg:url("img/home-bg.jpg")}
+body[data-bg="game"]{--bgimg:url("img/game-bg.jpg")}
+body[data-bg="home"]::before{filter:blur(18px) saturate(1.1);transform:scale(1.08)}
+body[data-bg="home"]::after,body[data-bg="game"]::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.28))}
+:root[data-theme="dark"] body::after{background:linear-gradient(180deg,rgba(8,10,30,.35),rgba(8,10,30,.6))!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body::after{background:linear-gradient(180deg,rgba(8,10,30,.35),rgba(8,10,30,.6))!important}}
+.hero.banner{padding:0;aspect-ratio:1672/941;min-height:0;background:url("img/home-bg.jpg") center/100% 100% no-repeat;border:1px solid var(--glass-brd);border-radius:var(--r);box-shadow:var(--shadow-lg)}
+.hero.banner::before{display:none}
+.hero.banner>:not(.go){position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.hero.banner .go{position:absolute;left:79.5%;top:80.5%;width:19.5%;height:17.5%;border:0;border-radius:2rem;background:transparent;cursor:pointer;transition:transform .2s var(--ease),box-shadow .2s}
+.hero.banner .go:hover{transform:scale(1.05);box-shadow:0 0 0 3px rgba(255,255,255,.7),0 10px 30px rgba(0,0,0,.25)}
+.hero.banner .go:focus-visible{outline:3px solid #fff}
+.dlg .setc{grid-area:auto;padding:1rem 1.1rem;border:1px solid var(--line);border-radius:1.25rem;background:var(--fill);margin-bottom:.4rem}
+.dlg .setc .bigno{margin-left:auto}
+</style>
+
+<div id="app">
+  <header class="bar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span><span id="brandName" class="nm2">สั่นกระดิ่งพิชิตชัย</span></div>
+    <div class="tools" id="tools"></div>
+  </header>
+  <main id="screen"></main>
+</div>
+<div id="ov" hidden></div>
+<div id="fxflash"></div>
+<canvas id="fx"></canvas>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.10.1/sweetalert2.all.min.js"></script>
+<script>
+'use strict';
+/* ====== คลังข้อมูล ====== */
+const TOPICS={A:'ประเภทของกฎหมาย',B:'ศักดิ์ของกฎหมาย',C:'ที่มาและผู้ตรากฎหมาย'};
+const DIFF={e:'ง่าย',m:'กลาง',h:'ยาก'};
+// Q(หัวข้อ, ระดับ, โจทย์, [คำตอบที่ถูกอยู่ตัวแรก, ตัวลวง x3], คำอธิบาย)
+const Q=(t,d,q,c,x)=>({t,d,q,c,x});
+const LAW_QS=[
+Q('B','e','กฎหมายใดมีศักดิ์สูงสุดของประเทศไทย?',['รัฐธรรมนูญ','พระราชบัญญัติ','พระราชกฤษฎีกา','กฎกระทรวง'],'รัฐธรรมนูญเป็นกฎหมายสูงสุด กฎหมายอื่นจะขัดหรือแย้งกับรัฐธรรมนูญไม่ได้'),
+Q('B','e','“ศักดิ์ของกฎหมาย” หมายถึงอะไร?',['ลำดับชั้นความสูงต่ำของกฎหมาย','จำนวนมาตราในกฎหมาย','ระยะเวลาที่กฎหมายมีผลใช้บังคับ','ชื่อของผู้ร่างกฎหมาย'],'ศักดิ์ของกฎหมายคือฐานะหรือลำดับชั้นของกฎหมายแต่ละประเภทว่าฉบับใดสูงหรือต่ำกว่ากัน'),
+Q('B','e','กฎหมายที่มีศักดิ์ต่ำกว่าขัดแย้งกับกฎหมายที่มีศักดิ์สูงกว่า ผลเป็นอย่างไร?',['ใช้บังคับไม่ได้ในส่วนที่ขัดแย้ง','ใช้บังคับได้ตามปกติ','ยกเลิกกฎหมายที่ศักดิ์สูงกว่า','ใช้ทั้งสองฉบับพร้อมกัน'],'กฎหมายที่มีศักดิ์ต่ำกว่าจะขัดหรือแย้งกับกฎหมายที่มีศักดิ์สูงกว่าไม่ได้ ส่วนที่ขัดย่อมใช้บังคับไม่ได้'),
+Q('A','e','กฎหมายที่กำหนดสิทธิหน้าที่ระหว่างเอกชนกับเอกชน เช่น การซื้อขาย การกู้ยืม จัดเป็นกฎหมายประเภทใด?',['กฎหมายเอกชน','กฎหมายมหาชน','กฎหมายระหว่างประเทศ','กฎหมายวิธีสบัญญัติ'],'กฎหมายเอกชนใช้กับความสัมพันธ์ของเอกชนที่อยู่ในฐานะเท่าเทียมกัน เช่น ประมวลกฎหมายแพ่งและพาณิชย์'),
+Q('A','e','กฎหมายที่กำหนดความสัมพันธ์ระหว่างรัฐกับประชาชน โดยรัฐอยู่ในฐานะเหนือกว่า เป็นกฎหมายประเภทใด?',['กฎหมายมหาชน','กฎหมายเอกชน','กฎหมายแพ่ง','กฎหมายพาณิชย์'],'กฎหมายมหาชนใช้กับความสัมพันธ์ระหว่างรัฐกับเอกชน เช่น รัฐธรรมนูญ กฎหมายปกครอง กฎหมายอาญา'),
+Q('C','e','ใครมีอำนาจตราพระราชบัญญัติ?',['รัฐสภา','ศาลฎีกา','ผู้ว่าราชการจังหวัด','นายกเทศมนตรี'],'พระราชบัญญัติตราโดยรัฐสภา (ฝ่ายนิติบัญญัติ) แล้วทูลเกล้าฯ ให้พระมหากษัตริย์ทรงลงพระปรมาภิไธย'),
+Q('C','e','กฎหมายต้องประกาศในสิ่งใดจึงจะมีผลบังคับใช้กับประชาชน?',['ราชกิจจานุเบกษา','หนังสือพิมพ์รายวัน','เว็บไซต์ของโรงเรียน','ป้ายประกาศหมู่บ้าน'],'การประกาศในราชกิจจานุเบกษาเป็นการแจ้งให้ประชาชนทราบทั่วกัน'),
+Q('A','e','ประมวลกฎหมายแพ่งและพาณิชย์ จัดเป็นกฎหมายประเภทใด?',['กฎหมายเอกชน','กฎหมายมหาชน','กฎหมายระหว่างประเทศ','กฎหมายวิธีสบัญญัติ'],'ประมวลกฎหมายแพ่งและพาณิชย์วางหลักเรื่องสิทธิหน้าที่ของเอกชน จึงเป็นกฎหมายเอกชน'),
+Q('B','e','ข้อใดเรียงลำดับศักดิ์ของกฎหมายจากสูงไปต่ำได้ถูกต้อง?',['รัฐธรรมนูญ → พ.ร.บ. → พ.ร.ฎ. → กฎกระทรวง','พ.ร.บ. → รัฐธรรมนูญ → กฎกระทรวง → พ.ร.ฎ.','กฎกระทรวง → พ.ร.ฎ. → พ.ร.บ. → รัฐธรรมนูญ','รัฐธรรมนูญ → กฎกระทรวง → พ.ร.ฎ. → พ.ร.บ.'],'ลำดับคือ รัฐธรรมนูญ → พระราชบัญญัติ → พระราชกฤษฎีกา → กฎกระทรวง → ข้อบัญญัติท้องถิ่น'),
+Q('C','e','ข้อบัญญัติท้องถิ่นตราขึ้นโดยหน่วยงานใด?',['องค์กรปกครองส่วนท้องถิ่น','กระทรวง','รัฐสภา','ศาลปกครอง'],'องค์กรปกครองส่วนท้องถิ่น เช่น เทศบาล อบต. อบจ. กรุงเทพมหานคร ออกข้อบัญญัติใช้ในเขตของตน'),
+Q('A','e','กฎหมายที่กำหนดว่าการกระทำใดเป็นความผิดและมีโทษ เช่น จำคุก ปรับ คือกฎหมายใด?',['กฎหมายอาญา','กฎหมายแพ่ง','กฎหมายพาณิชย์','กฎหมายครอบครัว'],'กฎหมายอาญากำหนดความผิดและโทษที่รัฐลงแก่ผู้กระทำผิด'),
+Q('C','e','ข้อใดเป็นกฎหมายที่ตราเป็นลายลักษณ์อักษร?',['พระราชบัญญัติ','จารีตประเพณีท้องถิ่น','หลักกฎหมายทั่วไป','ความเชื่อของชุมชน'],'กฎหมายลายลักษณ์อักษรคือกฎหมายที่ตราเป็นข้อความเขียนไว้ชัดเจน เช่น รัฐธรรมนูญ พ.ร.บ. กฎกระทรวง'),
+Q('A','e','ประมวลกฎหมายมีลักษณะอย่างไร?',['รวบรวมกฎหมายเรื่องเดียวกันไว้เป็นหมวดหมู่','เป็นกฎหมายที่ออกโดยนายกรัฐมนตรี','เป็นกฎหมายที่ใช้เฉพาะในท้องถิ่น','เป็นกฎหมายที่ใช้ชั่วคราวเท่านั้น'],'ประมวลกฎหมายรวบรวมหลักกฎหมายเรื่องเดียวกันอย่างเป็นระบบ เช่น ประมวลกฎหมายอาญา'),
+Q('C','e','ข้อใดเป็นตัวอย่างของข้อบัญญัติท้องถิ่น?',['เทศบัญญัติ','พระราชกำหนด','กฎกระทรวง','พระราชกฤษฎีกา'],'เทศบัญญัติเป็นข้อบัญญัติท้องถิ่นที่เทศบาลตราขึ้น'),
+Q('A','e','กฎหมายที่กำหนดขั้นตอนการดำเนินคดีในศาล เช่น การฟ้อง การสืบพยาน จัดเป็นกฎหมายประเภทใด?',['กฎหมายวิธีสบัญญัติ','กฎหมายสารบัญญัติ','กฎหมายจารีตประเพณี','กฎหมายระหว่างประเทศ'],'กฎหมายวิธีสบัญญัติบอกวิธีการบังคับใช้สิทธิหน้าที่ เช่น ประมวลกฎหมายวิธีพิจารณาความแพ่ง'),
+Q('C','e','ใครเป็นผู้ทรงลงพระปรมาภิไธยในพระราชบัญญัติ เพื่อให้มีผลเป็นกฎหมาย?',['พระมหากษัตริย์','ประธานรัฐสภา','นายกรัฐมนตรี','ประธานศาลฎีกา'],'ร่าง พ.ร.บ. ที่รัฐสภาให้ความเห็นชอบ จะนำขึ้นทูลเกล้าฯ ให้พระมหากษัตริย์ทรงลงพระปรมาภิไธย'),
+Q('B','e','ข้อใดมีศักดิ์ต่ำที่สุด?',['ข้อบัญญัติท้องถิ่น','กฎกระทรวง','พระราชกฤษฎีกา','พระราชบัญญัติ'],'ข้อบัญญัติท้องถิ่นมีศักดิ์ต่ำกว่ากฎกระทรวง พระราชกฤษฎีกา และพระราชบัญญัติ'),
+
+Q('B','m','พระราชบัญญัติกับพระราชกำหนด มีศักดิ์เป็นอย่างไร?',['เท่ากัน','พระราชบัญญัติสูงกว่า','พระราชกำหนดสูงกว่า','เทียบศักดิ์กันไม่ได้'],'พ.ร.บ. และ พ.ร.ก. มีศักดิ์เท่ากัน ต่างกันที่ผู้ตราและกรณีที่ใช้'),
+Q('C','m','พระราชกำหนดตราโดยฝ่ายใด และตราในกรณีใด?',['คณะรัฐมนตรี ในกรณีเร่งด่วนจำเป็น','รัฐสภา ในสถานการณ์ปกติ','ศาล เมื่อตัดสินคดี','ท้องถิ่น เมื่อเก็บภาษี'],'พ.ร.ก. ตราโดยฝ่ายบริหาร (คณะรัฐมนตรี) เมื่อมีเหตุฉุกเฉินที่จำเป็นรีบด่วน เช่น รักษาความปลอดภัยหรือเศรษฐกิจของประเทศ'),
+Q('C','m','เมื่อตราพระราชกำหนดแล้ว ต้องทำอะไรต่อไป?',['เสนอรัฐสภาพิจารณาอนุมัติ','ใช้ได้เลยโดยไม่ต้องเสนอใคร','เสนอศาลฎีกาตรวจสอบ','ประกาศให้ท้องถิ่นรับรอง'],'พ.ร.ก. ต้องเสนอให้รัฐสภาพิจารณาโดยไม่ชักช้า เพื่อให้ฝ่ายนิติบัญญัติตรวจสอบ'),
+Q('C','m','พระราชกฤษฎีกาตราขึ้นเพื่ออะไร?',['กำหนดรายละเอียดตามอำนาจรัฐธรรมนูญหรือ พ.ร.บ.','แทน พ.ร.บ. ได้ทุกเรื่อง','แก้ไขเพิ่มเติมรัฐธรรมนูญ','ใช้เฉพาะในท้องถิ่น'],'พ.ร.ฎ. ออกโดยอาศัยอำนาจรัฐธรรมนูญหรือ พ.ร.บ. จึงขัดต่อกฎหมายแม่บทไม่ได้ และไม่ต้องผ่านรัฐสภา'),
+Q('C','m','กฎกระทรวงออกโดยใคร?',['รัฐมนตรี','นายกองค์การบริหารส่วนตำบล','ประธานศาลปกครอง','ผู้ว่าราชการจังหวัด'],'รัฐมนตรีออกกฎกระทรวงตามอำนาจที่ พ.ร.บ. ให้ไว้ เพื่อกำหนดรายละเอียดในการใช้ พ.ร.บ. นั้น'),
+Q('C','m','เทศบัญญัติเป็นข้อบัญญัติของหน่วยงานใด?',['เทศบาล','องค์การบริหารส่วนตำบล','องค์การบริหารส่วนจังหวัด','กรุงเทพมหานคร'],'เทศบัญญัติตราโดยเทศบาล'),
+Q('C','m','องค์การบริหารส่วนตำบล (อบต.) ตรากฎหมายท้องถิ่นที่เรียกว่าอะไร?',['ข้อบัญญัติตำบล','เทศบัญญัติ','ข้อบัญญัติจังหวัด','พระราชกฤษฎีกา'],'อบต. ตราข้อบัญญัติตำบล ส่วน อบจ. ตราข้อบัญญัติจังหวัด'),
+Q('C','m','กรุงเทพมหานครตรากฎหมายท้องถิ่นที่เรียกว่าอะไร?',['ข้อบัญญัติกรุงเทพมหานคร','เทศบัญญัติ','ข้อบัญญัติตำบล','กฎกระทรวง'],'กรุงเทพมหานครออกข้อบัญญัติกรุงเทพมหานคร ใช้ในเขตกรุงเทพฯ'),
+Q('B','m','พระราชกฤษฎีกากับกฎกระทรวง ฉบับใดมีศักดิ์สูงกว่า?',['พระราชกฤษฎีกา','กฎกระทรวง','เท่ากัน','เทียบศักดิ์กันไม่ได้'],'ลำดับคือ พ.ร.บ. → พ.ร.ฎ. → กฎกระทรวง → ข้อบัญญัติท้องถิ่น'),
+Q('B','m','เทศบัญญัติขัดกับกฎกระทรวง ผลเป็นอย่างไร?',['เทศบัญญัติใช้ไม่ได้ในส่วนที่ขัด','กฎกระทรวงใช้ไม่ได้ในส่วนที่ขัด','ใช้ได้ทั้งคู่','ให้ประชาชนเลือกใช้เอง'],'เทศบัญญัติมีศักดิ์ต่ำกว่ากฎกระทรวง จึงขัดหรือแย้งกับกฎกระทรวงไม่ได้'),
+Q('A','m','ข้อใดเป็นกฎหมายวิธีสบัญญัติ?',['ประมวลกฎหมายวิธีพิจารณาความอาญา','ประมวลกฎหมายอาญา','ประมวลกฎหมายแพ่งและพาณิชย์','รัฐธรรมนูญ'],'ประมวลกฎหมายวิธีพิจารณาความอาญากำหนดขั้นตอนดำเนินคดีอาญา จึงเป็นกฎหมายวิธีสบัญญัติ'),
+Q('A','m','ข้อใดเป็นกฎหมายมหาชน?',['กฎหมายปกครอง','กฎหมายครอบครัว','กฎหมายมรดก','กฎหมายเช่าซื้อ'],'กฎหมายครอบครัว มรดก และเช่าซื้ออยู่ในประมวลกฎหมายแพ่งและพาณิชย์ ซึ่งเป็นกฎหมายเอกชน'),
+Q('A','m','กฎหมายสารบัญญัติมีหน้าที่อะไร?',['กำหนดสิทธิ หน้าที่ และความผิดโดยตรง','กำหนดขั้นตอนการดำเนินคดีในศาล','กำหนดความสัมพันธ์ระหว่างประเทศ','กำหนดอำนาจของศาลเท่านั้น'],'กฎหมายสารบัญญัติวางสิทธิหน้าที่ไว้โดยตรง เช่น ประมวลกฎหมายอาญา ประมวลกฎหมายแพ่งและพาณิชย์'),
+Q('B','m','ข้อใดเป็นกฎหมายลำดับรอง ที่ออกตามอำนาจของ พ.ร.บ.?',['พระราชกฤษฎีกา','พระราชกำหนด','ประมวลกฎหมาย','พระราชบัญญัติประกอบรัฐธรรมนูญ'],'กฎหมายลำดับรองมีศักดิ์ต่ำกว่า พ.ร.บ. ได้แก่ พ.ร.ฎ. กฎกระทรวง และข้อบัญญัติท้องถิ่น'),
+Q('B','m','ประมวลกฎหมาย เช่น ประมวลกฎหมายอาญา มีศักดิ์เท่ากับกฎหมายใด?',['พระราชบัญญัติ','รัฐธรรมนูญ','กฎกระทรวง','ข้อบัญญัติท้องถิ่น'],'ประมวลกฎหมายตราขึ้นเป็น พ.ร.บ. จึงมีศักดิ์เท่ากับ พ.ร.บ.'),
+Q('C','m','ประชาชนผู้มีสิทธิเลือกตั้งครบจำนวนตามที่รัฐธรรมนูญกำหนด มีสิทธิทำสิ่งใดเกี่ยวกับกฎหมาย?',['เข้าชื่อเสนอร่างกฎหมาย','ลงพระปรมาภิไธย','ตราพระราชกำหนด','ตัดสินคดีรัฐธรรมนูญ'],'ประชาชนมีส่วนร่วมได้โดยการเข้าชื่อเสนอร่างกฎหมายต่อรัฐสภา'),
+Q('A','m','กฎหมายระหว่างประเทศใช้กับเรื่องใด?',['ความสัมพันธ์ระหว่างรัฐกับรัฐ','ความสัมพันธ์ในครอบครัว','ความสัมพันธ์ระหว่างนายจ้างกับลูกจ้าง','ความสัมพันธ์ระหว่างผู้ซื้อกับผู้ขาย'],'กฎหมายระหว่างประเทศควบคุมความสัมพันธ์ระหว่างรัฐกับรัฐและองค์การระหว่างประเทศ เช่น สนธิสัญญา'),
+Q('B','m','เหตุใด พระราชบัญญัติ จึงมีศักดิ์สูงกว่ากฎกระทรวง?',['ตราโดยรัฐสภาซึ่งมาจากตัวแทนประชาชน','มีจำนวนมาตรามากกว่า','ออกมาก่อนเสมอ','ลงประกาศในราชกิจจานุเบกษา'],'พ.ร.บ. ผ่านความเห็นชอบของรัฐสภา ส่วนกฎกระทรวงออกโดยฝ่ายบริหารตามอำนาจที่ พ.ร.บ. มอบให้'),
+Q('C','m','พระราชกฤษฎีกายุบสภาผู้แทนราษฎร ออกโดยอาศัยอำนาจตามกฎหมายใด?',['รัฐธรรมนูญ','กฎกระทรวง','เทศบัญญัติ','ประมวลกฎหมายอาญา'],'รัฐธรรมนูญให้พระมหากษัตริย์ทรงยุบสภาผู้แทนราษฎรโดยตราเป็นพระราชกฤษฎีกา'),
+Q('C','m','ข้อใดเรียงขั้นตอนการตรา พ.ร.บ. ได้ถูกต้อง?',['เสนอร่าง → รัฐสภาเห็นชอบ → ทูลเกล้าฯ → ประกาศราชกิจจาฯ','รัฐสภาเห็นชอบ → เสนอร่าง → ประกาศราชกิจจาฯ → ทูลเกล้าฯ','ประกาศราชกิจจาฯ → เสนอร่าง → รัฐสภาเห็นชอบ → ทูลเกล้าฯ','ทูลเกล้าฯ → เสนอร่าง → ประกาศราชกิจจาฯ → รัฐสภาเห็นชอบ'],'เริ่มจากเสนอร่าง รัฐสภาพิจารณาเห็นชอบ ทูลเกล้าฯ ให้ทรงลงพระปรมาภิไธย แล้วประกาศในราชกิจจานุเบกษา'),
+Q('C','m','“ผู้รักษาการ” ตาม พ.ร.บ. มีหน้าที่สำคัญอย่างไร?',['ออกกฎกระทรวงเพื่อใช้ พ.ร.บ. นั้น','ตรา พ.ร.บ. นั้นด้วยตนเอง','ตัดสินคดีตาม พ.ร.บ. นั้น','ทรงลงพระปรมาภิไธย'],'รัฐมนตรีผู้รักษาการมีอำนาจออกกฎกระทรวงและกำหนดรายละเอียดเพื่อให้ พ.ร.บ. ปฏิบัติได้จริง'),
+
+Q('B','h','พระราชบัญญัติประกอบรัฐธรรมนูญ มีศักดิ์อย่างไรเมื่อเทียบกับ พ.ร.บ. ทั่วไป?',['สูงกว่า','ต่ำกว่า','เท่ากัน','เทียบศักดิ์กันไม่ได้'],'พ.ร.ป. ตราตามที่รัฐธรรมนูญกำหนดเพื่อวางรายละเอียดของรัฐธรรมนูญ ตำราจัดให้มีศักดิ์รองจากรัฐธรรมนูญ และสูงกว่า พ.ร.บ. ทั่วไป'),
+Q('B','h','หากรัฐสภาไม่อนุมัติพระราชกำหนด ผลเป็นอย่างไร?',['ตกไป แต่ไม่กระทบกิจการที่ได้ทำไปแล้ว','ตกไป และยกเลิกกิจการที่ทำไปทั้งหมด','ใช้ต่อไปได้อีก 1 ปี','กลายเป็น พ.ร.บ. โดยอัตโนมัติ'],'พ.ร.ก. ที่ไม่ได้รับอนุมัติย่อมตกไป แต่การที่ได้ทำไปในระหว่างใช้ยังคงสมบูรณ์'),
+Q('B','h','เหตุใดรัฐธรรมนูญจึงมีศักดิ์สูงสุด?',['เป็นกฎหมายแม่บทกำหนดโครงสร้างอำนาจรัฐและสิทธิเสรีภาพของประชาชน','เพราะมีจำนวนมาตรามากที่สุด','เพราะประกาศใช้มานานที่สุด','เพราะออกโดยนายกรัฐมนตรี'],'รัฐธรรมนูญเป็นกฎหมายแม่บทของการปกครอง กฎหมายอื่นต้องอยู่ภายใต้รัฐธรรมนูญ'),
+Q('B','h','ข้อใดเรียงศักดิ์จากสูงไปต่ำได้ถูกต้อง?',['รัฐธรรมนูญ → พ.ร.บ. → พ.ร.ฎ. → กฎกระทรวง → เทศบัญญัติ','รัฐธรรมนูญ → พ.ร.ฎ. → พ.ร.บ. → กฎกระทรวง → เทศบัญญัติ','รัฐธรรมนูญ → พ.ร.บ. → กฎกระทรวง → พ.ร.ฎ. → เทศบัญญัติ','รัฐธรรมนูญ → พ.ร.บ. → พ.ร.ฎ. → เทศบัญญัติ → กฎกระทรวง'],'ให้ใช้หลัก “ผู้ตราอยู่ใกล้อำนาจสูงสุดและต้องอาศัยอำนาจจากกฎหมายใด กฎหมายนั้นย่อมมีศักดิ์ต่ำกว่า”'),
+Q('B','h','อบต. ออกข้อบัญญัติห้ามประชาชนประกอบอาชีพทุกชนิด ซึ่งขัดต่อสิทธิตามรัฐธรรมนูญ ผลเป็นอย่างไร?',['ข้อบัญญัตินั้นใช้บังคับไม่ได้','ข้อบัญญัติใช้ได้เพราะท้องถิ่นออกเอง','รัฐธรรมนูญถูกแก้ไขโดยอัตโนมัติ','ใช้ได้เฉพาะในตำบลนั้น'],'ข้อบัญญัติท้องถิ่นมีศักดิ์ต่ำกว่ารัฐธรรมนูญ ส่วนที่ขัดย่อมใช้บังคับไม่ได้'),
+Q('A','h','ข้อใดจัดเป็นกฎหมายมหาชนทั้งหมด?',['รัฐธรรมนูญ กฎหมายปกครอง กฎหมายอาญา','กฎหมายแพ่ง กฎหมายอาญา กฎหมายปกครอง','กฎหมายพาณิชย์ กฎหมายภาษีอากร กฎหมายแพ่ง','กฎหมายครอบครัว กฎหมายมรดก กฎหมายอาญา'],'กฎหมายแพ่ง พาณิชย์ ครอบครัว และมรดกเป็นกฎหมายเอกชน ส่วนรัฐธรรมนูญ ปกครอง และอาญาเป็นกฎหมายมหาชน'),
+Q('A','h','ข้อใดจับคู่ประมวลกฎหมายกับประเภทได้ถูกต้อง?',['ป.แพ่งและพาณิชย์ – เอกชน, ป.อาญา – มหาชน','ป.แพ่งและพาณิชย์ – มหาชน, ป.อาญา – เอกชน','รัฐธรรมนูญ – เอกชน, ป.อาญา – เอกชน','ป.แพ่งและพาณิชย์ – ระหว่างประเทศ, ป.อาญา – เอกชน'],'ป.แพ่งและพาณิชย์เป็นกฎหมายเอกชน ส่วน ป.อาญาเป็นกฎหมายมหาชนเพราะรัฐเป็นผู้ลงโทษ'),
+Q('B','h','พ.ร.บ. สองฉบับมีศักดิ์เท่ากันแต่ขัดกันในเรื่องเดียวกัน ให้ใช้หลักใด?',['ฉบับใหม่ใช้แทนฉบับเก่าในส่วนที่ขัดกัน','ฉบับเก่าใช้ก่อนเสมอ','ต้องให้ศาลชี้ขาดทุกครั้ง','ใช้ทั้งสองฉบับพร้อมกัน'],'หลัก “กฎหมายใหม่ยกเลิกกฎหมายเก่า” ในส่วนที่ขัดหรือแย้งกัน'),
+Q('B','h','กฎหมายพิเศษกับกฎหมายทั่วไปมีศักดิ์เท่ากัน ใช้กับเรื่องเดียวกันและขัดกัน ให้ใช้ฉบับใด?',['กฎหมายพิเศษ','กฎหมายทั่วไป','ฉบับที่มีจำนวนมาตรามากกว่า','ฉบับที่ประกาศก่อน'],'หลัก “กฎหมายพิเศษยกเว้นกฎหมายทั่วไป” กฎหมายพิเศษจึงใช้บังคับก่อน'),
+Q('C','h','ตามประมวลกฎหมายแพ่งและพาณิชย์ หากไม่มีบทกฎหมายที่ใช้ได้ ให้วินิจฉัยคดีตามอะไรเป็นอันดับแรก?',['จารีตประเพณีแห่งท้องถิ่น','ความเห็นของคู่ความ','ธรรมเนียมของต่างประเทศ','คำสั่งของผู้ว่าราชการจังหวัด'],'ลำดับคือ ตัวบทกฎหมาย → จารีตประเพณีแห่งท้องถิ่น → บทกฎหมายใกล้เคียงอย่างยิ่ง → หลักกฎหมายทั่วไป'),
+Q('B','h','หน่วยงานใดวินิจฉัยว่า พ.ร.บ. ขัดหรือแย้งต่อรัฐธรรมนูญหรือไม่?',['ศาลรัฐธรรมนูญ','ศาลแขวง','ศาลแรงงาน','คณะรัฐมนตรี'],'ศาลรัฐธรรมนูญมีหน้าที่พิจารณาวินิจฉัยความชอบด้วยรัฐธรรมนูญของกฎหมาย'),
+Q('C','h','หน่วยงานใดมีอำนาจพิจารณาว่ากฎ เช่น กฎกระทรวงหรือข้อบัญญัติท้องถิ่น ออกโดยชอบด้วยกฎหมายหรือไม่?',['ศาลปกครอง','ศาลแขวง','ศาลแรงงาน','ศาลเยาวชนและครอบครัว'],'ศาลปกครองพิจารณาคดีพิพาททางปกครอง รวมถึงความชอบด้วยกฎหมายของกฎที่หน่วยงานทางปกครองออก'),
+Q('A','h','ข้อใดเป็นกฎหมายสารบัญญัติทั้งหมด?',['ป.อาญา และ ป.แพ่งและพาณิชย์','ป.วิ.แพ่ง และ ป.วิ.อาญา','ป.อาญา และ ป.วิ.อาญา','ป.แพ่งและพาณิชย์ และ ป.วิ.แพ่ง'],'ป.วิ.แพ่งและ ป.วิ.อาญาเป็นกฎหมายวิธีสบัญญัติ ส่วน ป.อาญาและ ป.แพ่งและพาณิชย์เป็นกฎหมายสารบัญญัติ')
+];
+
+LAW_QS.forEach(q=>{q.t=TOPICS[q.t]||q.t});
+const LAW_SET={id:'law',builtin:true,name:'ชุดตัวอย่างในเกม',subject:'ชุดตัวอย่าง',title:'สั่นกระดิ่งพิชิตชัย',indicator:'',qs:LAW_QS};
+let QUESTIONS=LAW_QS;
+const AV=[{e:'🐘',n:'ทีมช้าง'},{e:'🐯',n:'ทีมเสือ'},{e:'🦊',n:'ทีมจิ้งจอก'},{e:'🐼',n:'ทีมแพนด้า'},{e:'🐸',n:'ทีมกบ'},{e:'🦉',n:'ทีมนกฮูก'}];
+const KEYC=['KeyQ','KeyP','KeyZ','KeyM','KeyT','KeyI'], KEYL=['Q','P','Z','M','T','I'];
+const LAB=['ก','ข','ค','ง'];
+const ANSWER_SECS=3, PTS_OK=5, PTS_BAD=3;
+
+/* ====== ตัวช่วย ====== */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const reduceMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt=s=>{s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+
+/* ====== การตั้งค่า ====== */
+const DEF={setId:'law',mode:'bell',minutes:3,questions:10,diffs:['e','m','h'],order:'random',players:3,names:AV.map(a=>a.n),fbSecs:4,font:1,theme:'auto',sound:true,vol:0.7};
+let S=Object.assign({},DEF);
+try{const raw=localStorage.getItem('law-bell-v1');if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){}
+if(!Array.isArray(S.names)||S.names.length<6)S.names=AV.map((a,i)=>(S.names&&S.names[i])||a.n);
+if(!Array.isArray(S.diffs)||!S.diffs.length)S.diffs=['e','m','h'];
+function save(){try{localStorage.setItem('law-bell-v1',JSON.stringify(S))}catch(e){}}
+function applyDisplay(){
+  const r=document.documentElement;
+  r.style.setProperty('--scale',S.font);
+  if(S.theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',S.theme);
+  if(master)master.gain.value=S.sound?S.vol:0;
+}
+
+/* ====== ชุดคำถาม ====== */
+let CUSTOM=[];
+try{const r=JSON.parse(localStorage.getItem('law-bell-sets-v1')||'[]');if(Array.isArray(r))CUSTOM=r.filter(x=>x&&x.id&&x.name&&Array.isArray(x.qs)&&x.qs.length)}catch(e){}
+const allSets=()=>[LAW_SET,...CUSTOM];
+const activeSet=()=>allSets().find(x=>x.id===S.setId)||LAW_SET;
+function saveSets(){try{localStorage.setItem('law-bell-sets-v1',JSON.stringify(CUSTOM));return true}catch(e){toast('บันทึกในเบราว์เซอร์ไม่ได้ ชุดนี้ใช้ได้จนกว่าจะปิดหน้า','warning');return false}}
+function useSet(id,persist){
+  S.setId=allSets().some(x=>x.id===id)?id:'law';
+  QUESTIONS=activeSet().qs;
+  const av=['e','m','h'].filter(k=>QUESTIONS.some(q=>q.d===k));
+  S.diffs=S.diffs.filter(k=>av.includes(k));if(!S.diffs.length)S.diffs=av.slice();
+  if(persist)save();
+}
+function updateBrand(){const b=$('#brandName');if(b)b.textContent=activeSet().title||'สั่นกระดิ่งพิชิตชัย'}
+useSet(S.setId,false);
+
+/* ---- อ่านและตรวจข้อมูลนำเข้า ---- */
+const norm=s=>String(s==null?'':s).replace(/\s+/g,'').toLowerCase();
+const ALIAS={t:['หัวข้อ','topic','บทเรียน','เรื่อง','หมวด','หมวดหมู่'],d:['ระดับ','level','ความยาก','ระดับความยาก'],q:['คำถาม','question','โจทย์'],a:['คำตอบที่ถูก','คำตอบที่ถูกต้อง','คำตอบ','เฉลย','correct','answer'],x:['คำอธิบาย','explanation','เหตุผล']};
+function headerMap(row){
+  const m={t:-1,d:-1,q:-1,a:-1,x:-1,w:[]};
+  row.forEach((h,i)=>{const n=norm(h);if(!n)return;let hit=false;
+    for(const k of Object.keys(ALIAS)){if(m[k]===-1&&ALIAS[k].includes(n)){m[k]=i;hit=true;break}}
+    if(!hit&&/^(ตัวเลือกผิด|ตัวลวง|ตัวเลือก|ผิด|wrong|distractor|incorrect)/.test(n))m.w.push(i);
+  });
+  return m;
+}
+function parseDelimited(text){
+  text=String(text).replace(/^\uFEFF/,'');
+  const first=text.split(/\r?\n/,1)[0]||'';
+  const D=first.includes('\t')?'\t':(first.split(';').length>first.split(',').length?';':',');
+  const rows=[];let row=[],cur='',q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){cur+='"';i++}else q=false}else cur+=c}
+    else if(c==='"'&&cur===''){q=true}
+    else if(c===D){row.push(cur);cur=''}
+    else if(c==='\n'){row.push(cur);rows.push(row);row=[];cur=''}
+    else if(c!=='\r')cur+=c;
+  }
+  if(cur!==''||row.length){row.push(cur);rows.push(row)}
+  return rows;
+}
+function buildQuestions(rows){
+  rows=rows.map(r=>r.map(c=>String(c==null?'':c).trim()));
+  const hi=rows.findIndex(r=>r.some(c=>c));
+  if(hi<0)return{error:'ไม่พบข้อมูล ลองวางข้อมูลรวมแถวหัวตาราง'};
+  const skipped=[],warns=[],qs=[];
+  let m=headerMap(rows[hi]),start;
+  if(m.q>-1&&m.a>-1){
+    if(!m.w.length)return{error:'ไม่พบคอลัมน์ “ตัวเลือกผิด” ในหัวตาราง'};
+    start=hi+1;
+  }else{m={t:0,d:1,q:2,a:3,w:[4,5,6],x:7};start=hi;warns.push({row:'ทั้งหมด',reason:'ไม่พบหัวตาราง จึงใช้ลำดับคอลัมน์ตามแม่แบบ'})}
+  const seenQ=new Set(),LV={'ง่าย':'e','easy':'e','e':'e','1':'e','กลาง':'m','ปานกลาง':'m','medium':'m','m':'m','2':'m','ยาก':'h','hard':'h','h':'h','3':'h'};
+  for(let i=start;i<rows.length;i++){
+    const r=rows[i];if(!r.some(c=>c))continue;
+    const row=i+1,get=k=>m[k]>-1?(r[m[k]]||''):'';
+    const q=get('q'),a=get('a');
+    if(!q){skipped.push({row,reason:'คำถามว่าง'});continue}
+    if(!a){skipped.push({row,reason:'ไม่มีคำตอบที่ถูก'});continue}
+    if(seenQ.has(norm(q))){skipped.push({row,reason:'คำถามซ้ำกับแถวก่อนหน้า'});continue}
+    const seen=new Set([norm(a)]);let wrong=[];
+    for(const idx of m.w){const v=r[idx]||'';if(v&&!seen.has(norm(v))){seen.add(norm(v));wrong.push(v)}}
+    if(!wrong.length){skipped.push({row,reason:'ต้องมีตัวเลือกผิดอย่างน้อย 1 ข้อ (ไม่ซ้ำกับคำตอบที่ถูก)'});continue}
+    if(wrong.length>3){wrong=wrong.slice(0,3);warns.push({row,reason:'มีตัวเลือกผิดเกิน 3 ข้อ ใช้ 3 ข้อแรก'})}
+    const ln=norm(get('d'));let d=LV[ln];
+    if(!d){d='m';if(ln)warns.push({row,reason:'ไม่รู้จักระดับ “'+get('d')+'” ใช้ “กลาง”'})}
+    seenQ.add(norm(q));
+    qs.push({t:get('t')||'ทั่วไป',d,q,c:[a,...wrong],x:get('x')});
+    if(qs.length>=500){warns.push({row,reason:'ครบ 500 ข้อ ข้ามแถวที่เหลือ'});break}
+  }
+  return{qs,skipped,warns};
+}
+let xlsxP=null;
+function loadXLSX(){
+  if(window.XLSX)return Promise.resolve();
+  if(!xlsxP)xlsxP=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';sc.onload=res;sc.onerror=()=>{xlsxP=null;rej(new Error('load'))};document.head.appendChild(sc)});
+  return xlsxP;
+}
+async function readFileRows(f){
+  const ext=(f.name.split('.').pop()||'').toLowerCase();
+  if(ext==='xlsx'||ext==='xls'){
+    await loadXLSX();
+    const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});
+    let pick=null;
+    for(const n of wb.SheetNames){
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:false,defval:''});
+      if(!rows.length)continue;
+      if(!pick)pick=rows;
+      const hr=rows.find(r=>r.some(c=>c));
+      if(hr){const m=headerMap(hr);if(m.q>-1&&m.a>-1){pick=rows;break}}
+    }
+    return pick||[];
+  }
+  return parseDelimited(await f.text());
+}
+
+/* ====== เสียง (สังเคราะห์ด้วย WebAudio) ====== */
+let AC=null,master=null;
+function ensureAudio(){
+  try{
+    if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return;AC=new C();master=AC.createGain();master.connect(AC.destination)}
+    if(AC.state==='suspended')AC.resume();
+    master.gain.value=S.sound?S.vol:0;
+  }catch(e){}
+}
+function tone(f,t0,d,type,g,to){
+  if(!AC||!S.sound)return;
+  try{
+    const t=AC.currentTime+t0,o=AC.createOscillator(),n=AC.createGain();
+    o.type=type||'sine';o.frequency.setValueAtTime(f,t);
+    if(to)o.frequency.exponentialRampToValueAtTime(to,t+d);
+    n.gain.setValueAtTime(0.0001,t);n.gain.exponentialRampToValueAtTime(g||.3,t+.012);n.gain.exponentialRampToValueAtTime(0.0001,t+d);
+    o.connect(n);n.connect(master);o.start(t);o.stop(t+d+.05);
+  }catch(e){}
+}
+const SFX={
+  bell(){tone(1319,0,1,'sine',.4);tone(2637,0,.6,'sine',.16);tone(1976,0,.8,'triangle',.12)},
+  correct(){[523,659,784,1047].forEach((f,i)=>tone(f,i*.09,.35,'triangle',.3))},
+  wrong(){tone(220,0,.45,'sawtooth',.28,110);tone(165,.02,.45,'square',.12,82)},
+  timeout(){tone(300,0,.18,'square',.22);tone(300,.25,.18,'square',.22);tone(180,.5,.5,'sawtooth',.25,90)},
+  tick(hot){tone(hot?1500:1000,0,.09,'square',.12)},
+  ready(n){tone(n?660:990,0,n?.12:.4,'triangle',.25)},
+  fanfare(){[523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,i*.13,.3,'triangle',.3));tone(1568,.95,.8,'sine',.3)}
+};
+
+/* ====== เอฟเฟกต์ภาพ ====== */
+const fxc=$('#fx'),fctx=fxc.getContext('2d');let parts=[],fxOn=false;
+function sizeFx(){const d=window.devicePixelRatio||1;fxc.width=innerWidth*d;fxc.height=innerHeight*d;fctx.setTransform(d,0,0,d,0,0)}
+addEventListener('resize',sizeFx);sizeFx();
+const CONF=['#F5B71B','#2F6BE8','#D63A4A','#0C8F5F','#7A4FE0','#FFFFFF','#FF8A3D'];
+function confetti(x,y,n,spread){
+  if(reduceMotion())n=Math.min(n,10);
+  for(let i=0;i<n;i++)parts.push({x,y,vx:(Math.random()-.5)*14*(spread||1),vy:-Math.random()*13-3,g:.38,s:6+Math.random()*7,r:Math.random()*6,vr:(Math.random()-.5)*.4,c:CONF[i%CONF.length],life:1});
+  if(!fxOn){fxOn=true;requestAnimationFrame(fxLoop)}
+}
+function fxLoop(){
+  fctx.clearRect(0,0,innerWidth,innerHeight);
+  parts=parts.filter(p=>p.life>0&&p.y<innerHeight+30);
+  for(const p of parts){p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.vx*=.99;p.life-=.007;
+    fctx.save();fctx.globalAlpha=Math.max(0,Math.min(1,p.life*1.6));fctx.translate(p.x,p.y);fctx.rotate(p.r);fctx.fillStyle=p.c;fctx.fillRect(-p.s/2,-p.s/3,p.s,p.s*.6);fctx.restore()}
+  if(parts.length)requestAnimationFrame(fxLoop);else{fxOn=false;fctx.clearRect(0,0,innerWidth,innerHeight)}
+}
+function flash(color){const f=$('#fxflash');f.style.setProperty('--fx',color);f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}
+function shake(el){if(!el)return;el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
+let toastT;
+function swalBase(){return window.Swal.mixin({heightAuto:false,scrollbarPadding:false,buttonsStyling:false,reverseButtons:true,customClass:{popup:'sw-pop',confirmButton:'sw-ok',cancelButton:'sw-no'}})}
+function swalModalOpen(){try{if(!window.Swal||!Swal.isVisible())return false;const p=Swal.getPopup();return !!p&&!p.classList.contains('swal2-toast')}catch(e){return false}}
+function toast(m,icon){
+  if(window.Swal){try{swalBase().fire({toast:true,position:'top',showConfirmButton:false,timer:3200,timerProgressBar:true,icon:icon||'info',title:m,customClass:{popup:'sw-pop sw-toast'}});return}catch(e){}}
+  const t=$('#toast');if(!t)return;t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600);
+}
+let celeT=null;
+function celebrate(){
+  clearInterval(celeT);let n=0;sizeFx();
+  const burst=()=>{confetti(Math.random()*innerWidth,-10,26,.6);if(++n>10)clearInterval(celeT)};
+  burst();celeT=setInterval(burst,380);
+}
+
+/* ====== ไอคอน ====== */
+const IC={
+  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  timer:'<path d="M10 2h4"/><path d="m12 14 3-3"/><circle cx="12" cy="14" r="8"/>',
+  layers:'<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+  signal:'<path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/><path d="M2 20h.01"/>',
+  lib:'<path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/>',
+  gear:'<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+  pause:'<rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>',
+  play:'<polygon points="6 3 20 12 6 21 6 3"/>',
+  restart:'<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+  full:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',
+  sound:'<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>',
+  mute:'<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/>',
+  type:'<polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/>',
+  skip:'<polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/>',
+  arrow:'<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  trophy:'<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+  award:'<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>',
+  target:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>',
+  sparkle:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>'
+};
+const svg=(n,cls)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"${cls?` class="${cls}"`:''}>${IC[n]}</svg>`;
+
+/* ====== หัวเรื่อง / ปุ่มเครื่องมือ ====== */
+let screenName='setup';
+function renderTools(){
+  const inGame=screenName==='game'&&G&&G.phase!=='ended';
+  const b=(act,ic,label,txt)=>`<button class="ibtn" type="button" data-act="${act}" aria-label="${label}">${svg(ic)}${txt?`<span class="tx">${txt}</span>`:''}</button>`;
+  $('#tools').innerHTML=(inGame?b('pause','pause','หยุดชั่วคราว (Esc)','หยุด')+b('restart','restart','เริ่มเกมใหม่','เริ่มใหม่'):'')
+    +(inGame?'':b('gear','gear','ตั้งค่าเกม','ตั้งค่า')+b('bank','lib','คลังคำถาม','คลังคำถาม'))
+    +`<button class="ibtn" type="button" data-act="sound" aria-label="เปิดหรือปิดเสียง" aria-pressed="${S.sound}">${svg(S.sound?'sound':'mute')}</button>`
+    +b('display','type','ตั้งค่าการแสดงผล','แสดงผล')+b('full','full','เต็มหน้าจอ','');
+}
+function toggleFull(){
+  try{
+    if(document.fullscreenElement){document.exitFullscreen()}
+    else{const p=document.documentElement.requestFullscreen();if(p&&p.catch)p.catch(()=>toast('เต็มหน้าจอไม่ได้ในหน้านี้ ลองกด F11 ที่เบราว์เซอร์'))}
+  }catch(e){toast('เต็มหน้าจอไม่ได้ในหน้านี้ ลองกด F11 ที่เบราว์เซอร์')}
+}
+
+/* ====== หน้าตั้งค่า ====== */
+function chips(key,items,labelFn){return items.map(v=>`<button class="chip" type="button" data-set="${key}" data-val="${v}">${labelFn(v)}</button>`).join('')}
+function gameRowsHTML(){return `
+      <div class="row"><span class="lb">เวลารวมของเกม</span>
+        <div class="chips">${chips('minutes',[1,3,5,10],v=>v+' นาที')}<button class="chip" type="button" data-set="minutes" data-val="0">ไม่จำกัด</button>
+        <input class="numin" id="cMin" type="number" min="1" max="60" inputmode="numeric" placeholder="กำหนดเอง" aria-label="กำหนดเวลาเอง (นาที)"><span class="hint">นาที</span></div></div>
+      <div class="row"><span class="lb">จำนวนคำถาม</span>
+        <div class="chips">${chips('questions',[5,10,15,20],v=>v+' ข้อ')}<button class="chip" type="button" data-set="questions" data-val="0">ทั้งหมด</button>
+        <input class="numin" id="cQ" type="number" min="1" max="${QUESTIONS.length}" inputmode="numeric" placeholder="กำหนดเอง" aria-label="กำหนดจำนวนข้อเอง"><span class="hint">ข้อ</span></div>
+        <span class="hint" id="poolInfo"></span></div>
+      <div class="row"><span class="lb">ระดับความยาก (เลือกได้หลายระดับ)</span>
+        <div class="chips">${['e','m','h'].map(k=>`<button class="chip" type="button" data-diff="${k}" aria-pressed="false">${DIFF[k]}</button>`).join('')}</div></div>
+      <div class="row"><span class="lb">ลำดับคำถาม</span>
+        <div class="chips"><button class="chip" type="button" data-set="order" data-val="random">สุ่ม</button><button class="chip" type="button" data-set="order" data-val="seq">เรียงตามลำดับในชุด</button></div></div>
+      <div class="row"><span class="lb">เฉลยหลังตอบ แล้วไปข้อต่อไปใน</span>
+        <div class="chips">${chips('fbSecs',[2,4,6],v=>v+' วินาที')}<button class="chip" type="button" data-set="fbSecs" data-val="0">รอกดเอง</button></div></div>
+      <div class="row only-bell"><span class="lb">จำนวนผู้เล่นหรือทีม</span>
+        <div class="chips">${chips('players',[2,3,4,5,6],v=>v+' ทีม')}</div>
+        <div class="names" id="names"></div>
+        <span class="hint">ปุ่มบนแป้นพิมพ์ใช้กดกระดิ่ง หรือจะแตะปุ่มบนหน้าจอสัมผัสก็ได้</span></div>
+`}
+function poolCount(){return QUESTIONS.filter(q=>S.diffs.includes(q.d)).length}
+function setInfoHTML(){
+  const st=activeSet();
+  const lv={e:0,m:0,h:0};st.qs.forEach(q=>{lv[q.d]++});const tot=Math.max(1,st.qs.length);
+  const tc={};st.qs.forEach(q=>{const t=q.t||'ทั่วไป';tc[t]=(tc[t]||0)+1});
+  const tops=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  return `<div class="setc">
+      <div class="setc-h"><span class="ico">${svg('lib')}</span><div><span class="kl">ชุดคำถามที่ใช้</span><h2>${esc(st.name)}</h2></div><div class="bigno"><b>${st.qs.length}</b><span>ข้อ</span></div></div>
+      <div class="lvbar" role="img" aria-label="สัดส่วนระดับความยาก">${['e','m','h'].map(k=>lv[k]?`<i class="${k}" style="width:${lv[k]/tot*100}%"></i>`:'').join('')}</div>
+      <ul class="legend">${['e','m','h'].map(k=>`<li><i class="${k}"></i>${DIFF[k]} <b>${lv[k]}</b></li>`).join('')}</ul>
+      <div class="tcs">${tops.map(([t,n])=>`<span class="tc">${esc(t)} <b>${n}</b></span>`).join('')}</div>
+      <button class="btn" type="button" data-act="bank">${svg('upload')}เปลี่ยน / นำเข้าคำถาม</button>
+    </div>`;
+}
+function showSetup(){
+  screenName='setup';G=null;clearInterval(celeT);document.body.dataset.bg='home';
+  const st=activeSet();updateBrand();
+  const lv={e:0,m:0,h:0};st.qs.forEach(q=>{lv[q.d]++});const tot=Math.max(1,st.qs.length);
+  const tc={};st.qs.forEach(q=>{const t=q.t||'ทั่วไป';tc[t]=(tc[t]||0)+1});
+  const tops=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  $('#screen').innerHTML=`
+  <div class="dash" id="setup" data-mode="${S.mode}">
+    <section class="glass hero banner" aria-label="สั่นกระดิ่งพิชิตชัย"><button class="go" type="button" data-act="start" aria-label="เริ่มเกม"></button>
+      <span class="eyebrow">${svg('sparkle')}เกมตอบคำถามสำหรับห้องเรียน ใช้ได้ทุกวิชา</span>
+      <h1>สั่นกระดิ่งพิชิตชัย</h1>
+      <p class="lead">เล่นคนเดียวเพื่อฝึกตัวเอง หรือแข่งกดกระดิ่งแย่งสิทธิ์ตอบกับเพื่อนในห้อง นำเข้าคำถามของวิชาไหนก็ได้จาก Google Sheet หรือ Excel</p>
+      <div class="feats"><span>${svg('user')}เล่นคนเดียว</span><span>${svg('users')}แข่งกดกระดิ่ง 2–6 ทีม</span><span>${svg('upload')}นำเข้าจาก Google Sheet / Excel</span></div>
+    </section>
+    <section class="kpis" aria-label="สรุปการตั้งค่า">
+      ${[['layers','จำนวนคำถาม','kQ'],['timer','เวลารวม','kT'],['signal','ระดับความยาก','kL'],['users','ผู้เล่น','kP']].map(([ic,l,id])=>`<button class="glass kpi" type="button" data-act="gear" aria-label="${l} (กดเพื่อตั้งค่า)"><span class="ico">${svg(ic)}</span><span class="kl">${l}</span><b id="${id}">–</b></button>`).join('')}
+    </section>
+    <section class="modes" role="radiogroup" aria-label="เลือกโหมดการเล่น">
+      <button class="glass mode" type="button" role="radio" data-set="mode" data-val="solo"><span class="tick">${svg('check')}</span><span class="ic">${svg('user')}</span><b>เล่นคนเดียว</b><span class="d">ตอบคำถามทีละข้อ แข่งกับเวลา ระบบนับคะแนนให้</span></button>
+      <button class="glass mode" type="button" role="radio" data-set="mode" data-val="bell"><span class="tick">${svg('check')}</span><span class="ic">${svg('bell')}</span><b>แข่งกดกระดิ่ง</b><span class="d">2–6 คนหรือทีม ใครกดก่อนได้สิทธิ์ตอบภายใน ${ANSWER_SECS} วินาที</span></button>
+    </section>
+  </div>`;
+  renderTools();syncSetup();
+}
+function renderNames(){
+  const el=$('#names');if(!el)return;
+  el.innerHTML=Array.from({length:S.players},(_,i)=>`<div class="nrow"><span class="sw" style="--pc:var(--p${i+1})" aria-hidden="true">${AV[i].e}</span>
+    <input class="txtin" type="text" maxlength="14" data-name="${i}" value="${esc(S.names[i])}" aria-label="ชื่อผู้เล่นคนที่ ${i+1}"><kbd>${KEYL[i]}</kbd></div>`).join('');
+}
+function syncSetup(){
+  const root=$('#setup');
+  if(root)root.dataset.mode=S.mode;
+  const ovEl=$('#ov');if(ovEl)ovEl.dataset.mode=S.mode;
+  $$('[data-set]').forEach(b=>{const on=String(S[b.dataset.set])===b.dataset.val;b.classList.toggle('on',on);if(b.getAttribute('role')==='radio')b.setAttribute('aria-checked',on)});
+  $$('[data-diff]').forEach(b=>{const k=b.dataset.diff,n=QUESTIONS.filter(q=>q.d===k).length,on=n>0&&S.diffs.includes(k);b.textContent=`${DIFF[k]} (${n})`;b.disabled=!n;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  const cm=$('#cMin'),cq=$('#cQ'),pi=$('#poolInfo'),sm=$('#sum');
+  const pc=poolCount(),use=S.questions>0?Math.min(S.questions,pc):pc;
+  if(cm&&document.activeElement!==cm)cm.value=[0,1,3,5,10].includes(S.minutes)?'':S.minutes;
+  if(cq&&document.activeElement!==cq)cq.value=[0,5,10,15,20].includes(S.questions)?'':S.questions;
+  if(pi)pi.textContent=`คลังคำถามตามระดับที่เลือก ${pc} ข้อ${S.questions>pc?` (จะใช้ ${pc} ข้อ)`:''}`;
+  if(sm)sm.textContent=`${S.mode==='bell'?`แข่งกดกระดิ่ง ${S.players} ทีม`:'เล่นคนเดียว'} · ${S.minutes>0?S.minutes+' นาที':'ไม่จำกัดเวลา'} · ${use} ข้อ · ระดับ ${S.diffs.map(k=>DIFF[k]).join('/')} · ${S.order==='random'?'สุ่มคำถาม':'เรียงตามลำดับ'}`;
+  const kv=(id,v)=>{const e=$(id);if(e)e.textContent=v};
+  kv('#kQ',use+' ข้อ');kv('#kT',S.minutes>0?S.minutes+' นาที':'ไม่จำกัด');kv('#kL',S.diffs.map(k=>DIFF[k]).join(' / '));kv('#kP',S.mode==='bell'?S.players+' ทีม':'1 คน');
+}
+
+/* ====== สถานะเกม ====== */
+let G=null,rafId=0,lastT=0;
+function startGame(){
+  ensureAudio();clearInterval(celeT);
+  let pool=QUESTIONS.filter(q=>S.diffs.includes(q.d));
+  if(!pool.length){toast('ไม่มีคำถามตามระดับที่เลือก','warning');return}
+  let list=S.order==='random'?shuffle(pool):pool.slice();
+  if(S.questions>0)list=list.slice(0,S.questions);
+  const n=S.mode==='bell'?S.players:1;
+  G={mode:S.mode,list,idx:-1,total:S.minutes>0?S.minutes*60:Infinity,timeLeft:S.minutes>0?S.minutes*60:Infinity,
+     phase:'ready',cd:3,lastCd:4,paused:false,timeUp:false,arm:0,winner:null,ansLeft:0,lastSec:0,fbLeft:0,cur:null,last:null,history:[],
+     players:Array.from({length:n},(_,i)=>({name:S.mode==='bell'?(S.names[i]||AV[i].n):'ผู้เล่น',score:0,answered:0,correct:0,wrong:0,timeout:0}))};
+  screenName='game';document.body.dataset.bg='game';buildGame();renderTools();
+  lastT=performance.now();cancelAnimationFrame(rafId);rafId=requestAnimationFrame(loop);
+}
+function buildGame(){
+  const bell=G.mode==='bell';
+  $('#screen').innerHTML=`
+  <section class="game" data-mode="${G.mode}" data-phase="ready">
+    <div class="glass hud">
+      <div class="hq"><span class="hico">${svg('layers')}</span><div><span class="lbl">ข้อที่</span><div><b id="qn">1</b><span class="of">/ ${G.list.length}</span></div></div></div>
+      <div class="ht" id="ht"><span class="hico">${svg('timer')}</span><div class="htb"><span class="lbl">เวลาที่เหลือของเกม</span><b id="tm">${isFinite(G.timeLeft)?fmt(G.timeLeft):'∞'}</b></div><div class="tbar"><i id="tfill"></i></div></div>
+      <span class="keyhint">Esc หยุดชั่วคราว · ${bell?'Space ข้อต่อไป':'1–4 เลือกคำตอบ'}</span>
+    </div>
+    <div class="stage" id="stage">
+      <div class="ready" aria-live="polite"><span>เตรียมตัวให้พร้อม</span><b id="cd">3</b></div>
+      <div class="glass qcard"><div class="qbody"><div class="tags"><span class="tag" id="tTopic"></span><span class="tag" id="tDiff"></span></div>
+        <p class="qtext" id="qtext"></p></div></div>
+      <div class="glass status" id="status"></div>
+      <div class="choices" id="choices" data-active="false"></div>
+      <div class="explain" id="explain" hidden></div>
+    </div>
+    ${bell?`<div class="pads" id="pads" style="--n:${G.players.length}">${G.players.map((p,i)=>`
+      <button class="pad" type="button" data-i="${i}" style="--pc:var(--p${i+1})" aria-label="กดกระดิ่ง ${esc(p.name)}">
+        <span class="rk" hidden></span><span class="av" aria-hidden="true">${AV[i].e}</span><span class="nm">${esc(p.name)}</span>
+        <span class="sc">0</span><span class="bl" aria-hidden="true">${svg('bell')}</span><kbd>${KEYL[i]}</kbd></button>`).join('')}</div>`
+    :`<div class="tiles"><div class="glass tile"><span class="ico">${svg('target')}</span><div class="tt"><span class="tl">ตอบแล้ว (ข้อ)</span><b id="sAns">0</b></div></div><div class="glass tile"><span class="ico">${svg('check')}</span><div class="tt"><span class="tl">ตอบถูก (ข้อ)</span><b id="sOk">0</b></div></div><div class="glass tile score"><span class="ico">${svg('trophy')}</span><div class="tt"><span class="tl">คะแนนรวม</span><b id="sSc">0</b></div></div></div>`}
+  </section>`;
+  if(bell){
+    $('#pads').addEventListener('pointerdown',e=>{const b=e.target.closest('.pad');if(!b)return;e.preventDefault();ensureAudio();buzz(+b.dataset.i)});
+    $('#pads').addEventListener('click',e=>{const b=e.target.closest('.pad');if(b&&e.detail===0)buzz(+b.dataset.i)});
+  }
+  setPhaseUI();updateHud();
+}
+function loop(now){
+  rafId=requestAnimationFrame(loop);
+  if(!G){return}
+  const dt=Math.min((now-lastT)/1000,.1);lastT=now;
+  if(G.paused||G.phase==='ended')return;
+  const ph=G.phase;
+  if(ph==='ready'){
+    G.cd-=dt;const c=Math.ceil(G.cd);
+    if(c!==G.lastCd&&c>0){G.lastCd=c;$('#cd').textContent=c;SFX.ready(1)}
+    if(G.cd<=0){SFX.ready(0);nextQuestion()}
+    return;
+  }
+  if(ph==='question'||ph==='answering'){
+    if(isFinite(G.timeLeft)){G.timeLeft-=dt;if(G.timeLeft<=0){G.timeLeft=0;G.timeUp=true}}
+    if(G.arm>0)G.arm-=dt;
+  }
+  if(ph==='answering'){
+    G.ansLeft-=dt;
+    const sec=Math.ceil(Math.max(G.ansLeft,0));
+    if(sec!==G.lastSec&&sec>0){G.lastSec=sec;SFX.tick(sec<=1)}
+    updateRing();
+    if(G.ansLeft<=0){resolve({timeout:true});return}
+  }
+  if(ph==='question'&&G.timeUp){endGame();return}
+  if(ph==='feedback'&&isFinite(G.fbLeft)){
+    G.fbLeft-=dt;const f=$('#fbfill');if(f)f.style.width=Math.max(0,G.fbLeft/G.fbTotal*100)+'%';
+    if(G.fbLeft<=0)advance();
+  }
+  updateHud();
+}
+function updateHud(){
+  if(!G)return;
+  const tm=$('#tm');if(!tm)return;
+  tm.textContent=isFinite(G.timeLeft)?fmt(G.timeLeft):'∞';
+  $('#tfill').style.width=isFinite(G.timeLeft)?(G.timeLeft/G.total*100)+'%':'100%';
+  $('#ht').classList.toggle('low',isFinite(G.timeLeft)&&G.timeLeft<=10&&G.timeLeft>0);
+  $('#qn').textContent=Math.max(1,G.idx+1);
+}
+
+/* ====== วงจรคำถาม ====== */
+function nextQuestion(){
+  G.idx++;
+  if(G.idx>=G.list.length){endGame();return}
+  const q=G.list[G.idx];
+  const order=shuffle([...q.c.keys()]);
+  G.cur={q,choices:order.map(i=>q.c[i]),ans:order.indexOf(0)};
+  G.phase='question';G.winner=G.mode==='solo'?0:null;G.arm=.45;G.last=null;
+  $('#tTopic').textContent=q.t||'ทั่วไป';
+  const td=$('#tDiff');td.textContent='ระดับ'+DIFF[q.d];td.className='tag d-'+q.d;
+  $('#qtext').textContent=q.q;
+  $('#choices').innerHTML=G.cur.choices.map((t,i)=>`<button class="choice" type="button" data-i="${i}"><span class="lab">${LAB[i]}</span><span class="txt">${esc(t)}</span><kbd>${i+1}</kbd></button>`).join('');
+  const ex=$('#explain');ex.hidden=true;ex.innerHTML='';
+  $('#stage').scrollTop=0;
+  $$('.pad .delta').forEach(d=>d.remove());
+  setPhaseUI();updateHud();updateScores();
+}
+function buzz(i){
+  if(!G||G.mode!=='bell'||G.paused||G.phase!=='question'||G.arm>0||i>=G.players.length)return;
+  G.winner=i;G.phase='answering';G.ansLeft=ANSWER_SECS;G.lastSec=ANSWER_SECS+1;
+  SFX.bell();flash(`var(--p${i+1})`);
+  setPhaseUI();updateRing();
+}
+function pick(i){
+  if(!G||G.paused||!G.cur||i<0||i>=G.cur.choices.length)return;
+  if(G.mode==='solo'){if(G.phase!=='question'||G.arm>0)return}
+  else if(G.phase!=='answering')return;
+  resolve({idx:i});
+}
+function resolve(res){
+  const c=G.cur,p=G.players[G.winner];
+  const kind=res.timeout?'timeout':(res.idx===c.ans?'correct':'wrong');
+  const delta=kind==='correct'?PTS_OK:-PTS_BAD;
+  p.score+=delta;p.answered++;p[kind==='correct'?'correct':kind]++;
+  G.history.push({q:c.q,kind,who:G.winner,chosen:res.timeout?null:c.choices[res.idx]});
+  G.last={kind,delta,idx:res.idx,who:G.winner};
+  G.phase='feedback';G.fbTotal=S.fbSecs;G.fbLeft=S.fbSecs>0?S.fbSecs:Infinity;
+  setPhaseUI();updateScores(true);
+  const pad=$(`.pad[data-i="${G.winner}"]`);
+  if(kind==='correct'){
+    SFX.correct();flash('#13c27a');
+    const r=(pad||$('.tile.score')||$('.qcard')).getBoundingClientRect();
+    confetti(r.left+r.width/2,r.top+r.height/3,70,1);
+  }else{
+    (kind==='timeout'?SFX.timeout:SFX.wrong)();flash('#e0364a');shake($('#stage'));
+  }
+}
+function advance(){
+  if(!G||G.paused||G.phase!=='feedback')return;
+  if(G.timeUp){endGame();return}
+  nextQuestion();
+}
+function skip(){
+  if(!G||G.paused||G.mode!=='solo'||G.phase!=='question'||G.arm>0)return;
+  G.history.push({q:G.cur.q,kind:'skip',who:0,chosen:null});
+  nextQuestion();
+}
+
+/* ====== วาดหน้าจอเกมตามสถานะ ====== */
+function setPhaseUI(){
+  const g=$('.game');if(!g||!G)return;
+  g.dataset.phase=G.phase;g.classList.toggle('paused',G.paused);
+  const bell=G.mode==='bell',ph=G.phase;
+  $$('.pad',g).forEach((b,i)=>{
+    b.classList.toggle('winner',bell&&G.winner===i&&(ph==='answering'||ph==='feedback'));
+    b.classList.toggle('locked',ph==='answering'&&G.winner!==i);
+  });
+  const ch=$('#choices');
+  ch.dataset.active=String((!bell&&ph==='question')||(bell&&ph==='answering'));
+  if(ph==='feedback'&&G.last){
+    $$('.choice',ch).forEach((b,i)=>{
+      b.classList.toggle('correct',i===G.cur.ans);
+      b.classList.toggle('wrong',i===G.last.idx&&i!==G.cur.ans);
+      b.classList.toggle('dim',i!==G.cur.ans&&i!==G.last.idx);
+    });
+    const ex=$('#explain');ex.hidden=false;
+    ex.innerHTML=`<b>เฉลย:</b> ${esc(G.cur.choices[G.cur.ans])}<p>${esc(G.cur.q.x)}</p>`;
+    requestAnimationFrame(()=>ex.scrollIntoView({block:'nearest',behavior:reduceMotion()?'auto':'smooth'}));
+  }
+  renderStatus();
+}
+function renderStatus(){
+  const st=$('#status');if(!st)return;
+  const bell=G.mode==='bell',ph=G.phase;let cls='s-'+ph,h='';
+  if(ph==='question'){
+    h=bell?`<div class="st-main"><span class="big">${svg('bell')}กดกระดิ่งเพื่อแย่งสิทธิ์ตอบ!</span><span class="sub">ผู้ที่กดก่อนมีเวลาตอบ ${ANSWER_SECS} วินาที ถ้าไม่ตอบถือว่าผิด</span></div>`
+      :`<div class="st-main"><span class="big">เลือกคำตอบที่ถูกต้อง</span><span class="sub">กดตัวเลือกบนหน้าจอ หรือกดเลข 1–4</span></div><button class="btn small" type="button" data-act="skip">${svg('skip')}ข้ามข้อนี้</button>`;
+  }else if(ph==='answering'){
+    const w=G.winner;
+    h=`<div class="st-main"><span class="big"><span aria-hidden="true">${AV[w].e}</span>${esc(G.players[w].name)} ได้สิทธิ์ตอบ!</span><span class="sub">เลือกคำตอบให้ทันใน ${ANSWER_SECS} วินาที (กดเลข 1–4 หรือแตะหน้าจอ)</span></div>
+    <div class="ring" id="ring"><svg viewBox="0 0 100 100"><circle class="bgc" cx="50" cy="50" r="42"/><circle class="fgc" id="ringfg" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="0"/></svg><b id="ringn">${ANSWER_SECS}</b></div>`;
+  }else if(ph==='feedback'&&G.last){
+    const L=G.last,who=bell?G.players[L.who].name+' ':'';
+    const t=L.kind==='correct'?`${who}ตอบถูก! +${PTS_OK} คะแนน`:L.kind==='wrong'?`${who}ตอบผิด −${PTS_BAD} คะแนน`:`${who}หมดเวลา! −${PTS_BAD} คะแนน`;
+    const ic=L.kind==='correct'?'check':L.kind==='wrong'?'x':'timer';
+    cls='s-'+L.kind;
+    h=`<div class="st-main"><span class="big">${svg(ic)}${esc(t)}</span><span class="sub">${G.timeUp?'หมดเวลาเกมแล้ว กดต่อเพื่อดูผลสรุป':'อ่านเฉลยด้านล่าง'}</span></div>
+    <button class="btn small primary" type="button" data-act="next">${G.timeUp?'ดูผลสรุป':'ข้อต่อไป'}${svg('arrow')}</button>${isFinite(G.fbLeft)?'<div class="fbbar"><i id="fbfill"></i></div>':''}`;
+  }
+  st.className='glass status '+cls;st.innerHTML=h;
+}
+function updateRing(){
+  const fg=$('#ringfg');if(!fg||!G)return;
+  const f=Math.max(0,G.ansLeft/ANSWER_SECS);
+  fg.setAttribute('stroke-dashoffset',String(263.9*(1-f)));
+  const n=Math.max(1,Math.ceil(G.ansLeft));
+  const b=$('#ringn');if(b)b.textContent=n;
+  const r=$('#ring');if(r)r.classList.toggle('hot',G.ansLeft<=1);
+}
+function rankOf(){
+  const sc=G.players.map(p=>p.score),max=Math.max(...sc),min=Math.min(...sc);
+  return {ranks:sc.map(s=>1+sc.filter(o=>o>s).length),spread:max!==min};
+}
+function floatDelta(host,d){
+  if(!host)return;
+  const e=document.createElement('span');e.className='delta '+(d>0?'up':'down');e.textContent=(d>0?'+':'−')+Math.abs(d);
+  host.appendChild(e);setTimeout(()=>e.remove(),1500);
+}
+function updateScores(animate){
+  if(!G)return;
+  if(G.mode==='bell'){
+    const {ranks,spread}=rankOf();
+    $$('.pad').forEach((b,i)=>{
+      $('.sc',b).textContent=G.players[i].score;
+      const rk=$('.rk',b);rk.hidden=!spread;rk.textContent='#'+ranks[i];
+    });
+    if(animate&&G.last)floatDelta($(`.pad[data-i="${G.last.who}"]`),G.last.delta);
+  }else{
+    const p=G.players[0];
+    $('#sAns').textContent=p.answered;$('#sOk').textContent=p.correct;$('#sSc').textContent=p.score;
+    if(animate&&G.last)floatDelta($('.tile.score'),G.last.delta);
+  }
+}
+
+/* ====== จบเกม / สรุปผล ====== */
+function endGame(){
+  if(!G||G.phase==='ended')return;
+  G.phase='ended';screenName='result';document.body.dataset.bg='game';renderTools();
+  const bell=G.mode==='bell';
+  const sorted=G.players.map((p,i)=>({p,i})).sort((a,b)=>b.p.score-a.p.score);
+  const top=sorted[0].p.score,winners=sorted.filter(o=>o.p.score===top);
+  const ranks=G.players.map(p=>1+G.players.filter(o=>o.score>p.score).length);
+  const played=G.history.filter(h=>h.kind!=='skip');
+  const review=`<details class="glass rev"><summary>ทบทวนเฉลยทั้ง ${G.history.length} ข้อที่เล่น</summary>${G.history.map((h,n)=>{
+    const lab={correct:'ตอบถูก',wrong:'ตอบผิด',timeout:'หมดเวลา',skip:'ข้าม'}[h.kind];
+    return `<div class="ritem"><span class="pill ${h.kind}">${lab}</span>${bell?`<small style="display:inline">${esc(G.players[h.who].name)}</small>`:''}<div><b>${n+1}. ${esc(h.q.q)}</b></div><div>เฉลย: ${esc(h.q.c[0])}</div><small>${esc(h.q.x)}</small></div>`}).join('')}</details>`;
+  let html='';
+  if(bell){
+    const maxAbs=Math.max(1,...G.players.map(p=>Math.abs(p.score)));
+    const title=winners.length>1?'เสมอกัน! '+winners.map(w=>w.p.name).join(' และ '):winners[0].p.name+' ชนะ!';
+    html=`<div class="win"><span class="em">${svg(winners.length>1?'users':'trophy')}</span><span class="lbl">ผลการแข่งขัน</span><h2>${esc(title)}</h2></div>
+    <div class="board">${sorted.map(({p,i})=>`<div class="glass rrow ${ranks[i]===1?'first':''}" style="--pc:var(--p${i+1})"><span class="no">${ranks[i]}</span>
+      <div class="who"><span aria-hidden="true">${AV[i].e}</span><div>${esc(p.name)}<small>ตอบถูก ${p.correct} · ตอบผิด ${p.wrong} · หมดเวลา ${p.timeout}</small></div></div><span class="pt">${p.score}</span>
+      <div class="barw"><i style="width:${Math.max(0,p.score)/maxAbs*100}%"></i></div></div>`).join('')}</div>`;
+  }else{
+    const p=G.players[0],acc=p.answered?Math.round(p.correct/p.answered*100):0;
+    const msg=!p.answered?'ยังไม่ได้ตอบข้อใดเลย ลองเล่นอีกครั้งนะ':acc>=80?'ยอดเยี่ยม! เข้าใจเนื้อหาได้ดีมาก':acc>=50?'ทำได้ดี ลองทบทวนข้อที่พลาดแล้วเล่นอีกครั้ง':'ลองทบทวนเนื้อหาอีกรอบ แล้วกลับมาเล่นใหม่';
+    const tp=[...new Set(played.map(h=>h.q.t))].map(t=>{const hs=played.filter(h=>h.q.t===t),ok=hs.filter(h=>h.kind==='correct').length;return {t,n:hs.length,ok}}).filter(x=>x.n);
+    const stat=(ic,l,v)=>`<div class="glass stat"><span class="ico">${svg(ic)}</span><div class="st"><span class="sl">${l}</span><b>${v}</b></div></div>`;
+    html=`<div class="win"><span class="em">${svg(acc>=80?'trophy':acc>=50?'award':'target')}</span><span class="lbl">${p.name?esc(p.name)+' · ':''}คะแนนรวม</span><h2>${p.score} คะแนน</h2></div>
+    <div class="stats">${stat('target','ตอบแล้ว',p.answered)}${stat('check','ตอบถูก',p.correct)}${stat('x','ตอบผิด / หมดเวลา',p.wrong+p.timeout)}${stat('award','ความแม่นยำ',acc+'%')}</div>
+    <p class="msg">${msg}</p>
+    ${tp.length?`<div class="glass panel"><p class="pt2">ผลแยกตามหัวข้อ</p><div class="topics">${tp.map(x=>`<div class="topic"><span>${esc(x.t)}</span><b>${x.ok}/${x.n} ข้อ</b><div class="tb"><i style="width:${x.ok/x.n*100}%"></i></div></div>`).join('')}</div></div>`:''}`;
+  }
+  $('#screen').innerHTML=`<div class="result">${html}${G.history.length?review:''}<div class="resacts"><button class="btn primary" type="button" data-act="again">${svg('restart')}เล่นอีกครั้ง</button><button class="btn" type="button" data-act="setup">กลับหน้าหลัก</button></div></div>`;
+  $('#screen').scrollTop=0;
+  if(typeof reportResult==='function')reportResult();
+  const good=bell?top>0:(G.players[0].answered&&G.players[0].correct/G.players[0].answered>=.5);
+  if(good){SFX.fanfare();celebrate()}else{SFX.tick(false)}
+}
+
+/* ====== หยุดชั่วคราว / กล่องข้อความ ====== */
+let ovKind=null;
+function openOv(kind){
+  ovKind=kind;
+  if(G&&G.phase!=='ended'&&screenName==='game'){G.paused=true;const g=$('.game');if(g)g.classList.add('paused')}
+  const ov=$('#ov');let h='';
+  if(kind==='pause')h=`<h2>${svg('pause')} หยุดชั่วคราว</h2><p>เวลาและคำถามหยุดนิ่งไว้ให้แล้ว</p><div class="acts"><button class="btn primary" data-act="resume" type="button">${svg('play')}เล่นต่อ</button><button class="btn" data-act="restart" type="button">${svg('restart')}เริ่มเกมใหม่</button><button class="btn" data-act="setup" type="button">กลับหน้าหลัก</button></div>`;
+  if(kind==='restart')h=`<h2>เริ่มเกมใหม่?</h2><p>คะแนนและความคืบหน้าตอนนี้จะถูกล้าง แล้วเริ่มนับเวลาใหม่ด้วยการตั้งค่าเดิม</p><div class="acts"><button class="btn gold" data-act="restartgo" type="button">เริ่มใหม่เลย</button><button class="btn" data-act="resume" type="button">ยกเลิก</button></div>`;
+  if(kind==='game')h=`<h2>${svg('gear')} ตั้งค่าเกม</h2>${setInfoHTML()}${gameRowsHTML()}<div class="acts"><button class="btn primary" data-act="resume" type="button">เสร็จสิ้น</button></div>`;
+  if(kind==='bank')h=bankHTML();
+  if(kind==='display')h=`<h2>${svg('type')} ตั้งค่าการแสดงผล</h2>
+    <div class="row"><span class="lb">ขนาดตัวอักษร</span><div class="chips">${[[.9,'เล็ก'],[1,'ปกติ'],[1.2,'ใหญ่'],[1.4,'ใหญ่มาก']].map(([v,l])=>`<button class="chip" type="button" data-disp="font" data-val="${v}">${l}</button>`).join('')}</div></div>
+    <div class="row"><span class="lb">รูปแบบหน้าจอ</span><div class="chips">${[['auto','ตามอุปกรณ์'],['light','สว่าง'],['dark','มืด']].map(([v,l])=>`<button class="chip" type="button" data-disp="theme" data-val="${v}">${l}</button>`).join('')}</div></div>
+    <div class="row"><span class="lb">เสียงประกอบ</span><div class="chips"><button class="chip" type="button" data-disp="sound" data-val="true">เปิด</button><button class="chip" type="button" data-disp="sound" data-val="false">ปิด</button>
+      <input type="range" id="vol" min="0.1" max="1" step="0.1" value="${S.vol}" aria-label="ความดังของเสียง"><button class="chip" type="button" data-act="testsound">ลองเสียง</button></div></div>
+    <div class="acts"><button class="btn primary" data-act="resume" type="button">${G&&G.paused?'ปิดและเล่นต่อ':'ปิด'}</button></div>`;
+  ov.innerHTML=`<div class="dlg glass${kind==='bank'?' wide':''}" role="dialog" aria-modal="true">${h}</div>`;
+  ov.hidden=false;syncDisp();renderNames();syncSetup();
+  const f=$('#ov .btn');if(f)f.focus();
+}
+function closeOv(){
+  $('#ov').hidden=true;ovKind=null;syncSetup();
+  if(G&&G.phase!=='ended'){G.paused=false;lastT=performance.now();const g=$('.game');if(g)g.classList.remove('paused')}
+}
+function syncDisp(){
+  $$('#ov [data-disp]').forEach(b=>{const k=b.dataset.disp;b.classList.toggle('on',String(S[k])===b.dataset.val)});
+}
+let pend=null,delArm=null;
+function bankHTML(){
+  return `<h2>${svg('lib')} คลังคำถาม</h2>
+  <div class="row"><span class="lb">ชุดคำถามที่ใช้เล่น</span><div class="sets">${allSets().map(x=>`<div class="setrow${x.id===S.setId?' on':''}"><button class="setpick" type="button" data-act="set-use" data-id="${esc(x.id)}" aria-pressed="${x.id===S.setId}"><b>${esc(x.name)}</b><small>${x.qs.length} ข้อ${x.builtin?' · ชุดตัวอย่าง':''}</small></button>${x.builtin?'':`<button class="btn small" type="button" data-act="set-del" data-id="${esc(x.id)}">${delArm===x.id?'กดอีกครั้งเพื่อลบ':'ลบ'}</button>`}</div>`).join('')}</div></div>
+  <div class="row"><span class="lb">นำเข้าชุดคำถามใหม่ (ใช้ได้ทุกวิชา)</span>
+    <input class="txtin" id="impName" type="text" maxlength="60" placeholder="ชื่อวิชาหรือชุดคำถาม เช่น วิทยาศาสตร์ ม.2 บทที่ 3" aria-label="ชื่อชุดคำถาม">
+    <textarea class="txtarea" id="impText" rows="5" placeholder="วางข้อมูลที่คัดลอกจาก Google Sheet หรือ Excel ที่นี่ (รวมแถวหัวตาราง)" aria-label="วางข้อมูลคำถาม"></textarea>
+    <div class="chips"><button class="btn small" type="button" data-act="imp-check">ตรวจข้อมูลที่วาง</button><button class="btn small" type="button" data-act="imp-file">เลือกไฟล์ .xlsx / .csv</button><button class="btn small" type="button" data-act="imp-tpl">คัดลอกหัวตาราง</button><input type="file" id="impFile" accept=".xlsx,.xls,.csv,.tsv,.txt" hidden></div>
+    <span class="hint">คอลัมน์: หัวข้อ | ระดับ (ง่าย/กลาง/ยาก) | คำถาม | คำตอบที่ถูก | ตัวเลือกผิด 1–3 | คำอธิบาย เกมสลับตำแหน่งตัวเลือกให้เอง</span>
+    <div id="impReport" aria-live="polite"></div></div>
+  <div class="acts"><button class="btn primary" data-act="resume" type="button">ปิด</button></div>`;
+}
+function runImport(rows){
+  const r=buildQuestions(rows);pend=r;const el=$('#impReport');if(!el)return;
+  if(r.error){el.innerHTML=`<div class="rep bad">${esc(r.error)}</div>`;return}
+  const lv={e:0,m:0,h:0};r.qs.forEach(q=>lv[q.d]++);
+  const notes=[...r.skipped.map(x=>`แถว ${x.row}: ข้าม (${x.reason})`),...r.warns.map(x=>`แถว ${x.row}: ${x.reason}`)];
+  el.innerHTML=`<div class="rep ${r.qs.length?'ok':'bad'}"><b>นำเข้าได้ ${r.qs.length} ข้อ</b>${r.skipped.length?` · ข้าม ${r.skipped.length} แถว`:''}<br><small>ง่าย ${lv.e} · กลาง ${lv.m} · ยาก ${lv.h}</small>${notes.length?`<ul>${notes.slice(0,8).map(t=>`<li>${esc(t)}</li>`).join('')}${notes.length>8?`<li>และอีก ${notes.length-8} รายการ</li>`:''}</ul>`:''}</div>${r.qs.length?'<button class="btn gold small" type="button" data-act="imp-save" style="margin-top:.6rem">บันทึกเป็นชุดและใช้เลย</button>':''}`;
+}
+function refreshAfterSetChange(){
+  if(screenName!=='game')showSetup();
+}
+function resumeAfterConfirm(){if(G&&G.phase!=='ended'&&screenName==='game'){G.paused=false;lastT=performance.now();const g=$('.game');if(g)g.classList.remove('paused')}}
+function confirmRestart(){
+  if(!window.Swal){openOv('restart');return}
+  const ov=$('#ov');if(ov&&!ov.hidden){ov.hidden=true;ovKind=null}
+  if(G&&G.phase!=='ended'&&screenName==='game'){G.paused=true;const g=$('.game');if(g)g.classList.add('paused')}
+  swalBase().fire({icon:'warning',title:'เริ่มเกมใหม่?',text:'คะแนนและความคืบหน้าตอนนี้จะถูกล้าง แล้วเริ่มนับเวลาใหม่ด้วยการตั้งค่าเดิม',showCancelButton:true,confirmButtonText:'เริ่มใหม่เลย',cancelButtonText:'ยกเลิก'})
+    .then(r=>{if(r.isConfirmed)startGame();else resumeAfterConfirm()});
+}
+function togglePause(){
+  if(!G||G.phase==='ended'||screenName!=='game')return;
+  if(ovKind)closeOv();else openOv('pause');
+}
+
+/* ====== เหตุการณ์ ====== */
+document.addEventListener('click',e=>{
+  const a=e.target.closest('[data-act]');
+  if(a){
+    ensureAudio();
+    switch(a.dataset.act){
+      case 'start':startGame();break;
+      case 'pause':togglePause();break;
+      case 'resume':closeOv();break;
+      case 'restart':confirmRestart();break;
+      case 'restartgo':$('#ov').hidden=true;ovKind=null;startGame();break;
+      case 'again':startGame();break;
+      case 'setup':{
+        const go=()=>{$('#ov').hidden=true;ovKind=null;showSetup()};
+        if(window.Swal&&G&&G.phase!=='ended'&&screenName==='game'){
+          swalBase().fire({icon:'question',title:'กลับหน้าหลัก?',text:'เกมที่กำลังเล่นอยู่จะสิ้นสุดและคะแนนจะไม่ถูกบันทึก',showCancelButton:true,confirmButtonText:'กลับหน้าหลัก',cancelButtonText:'เล่นต่อ'}).then(r=>{if(r.isConfirmed)go()});
+        }else go();
+        break}
+      case 'sound':S.sound=!S.sound;save();applyDisplay();renderTools();break;
+      case 'display':openOv('display');break;
+      case 'gear':openOv('game');break;
+      case 'bank':openOv('bank');break;
+      case 'set-use':useSet(a.dataset.id,true);delArm=null;refreshAfterSetChange();openOv('bank');break;
+      case 'set-del':{
+        const id=a.dataset.id,nm=(CUSTOM.find(x=>x.id===id)||{}).name||'';
+        const doDel=()=>{CUSTOM=CUSTOM.filter(x=>x.id!==id);saveSets();if(S.setId===id)useSet('law',true);refreshAfterSetChange();openOv('bank');toast('ลบชุดคำถามแล้ว','success')};
+        if(window.Swal){swalBase().fire({icon:'warning',title:'ลบชุดคำถามนี้?',text:`“${nm}” จะถูกลบออกจากเบราว์เซอร์นี้`,showCancelButton:true,confirmButtonText:'ลบ',cancelButtonText:'ยกเลิก'}).then(r=>{if(r.isConfirmed)doDel()})}
+        else doDel();
+        break}
+      case 'imp-check':runImport(parseDelimited($('#impText').value));break;
+      case 'imp-file':$('#impFile').click();break;
+      case 'imp-tpl':{
+        const tpl='หัวข้อ\tระดับ\tคำถาม\tคำตอบที่ถูก\tตัวเลือกผิด 1\tตัวเลือกผิด 2\tตัวเลือกผิด 3\tคำอธิบาย\nตัวอย่างหัวข้อ\tง่าย\t2 + 3 เท่ากับเท่าไร?\t5\t4\t6\t7\t2 บวก 3 ได้ 5';
+        const fb=()=>{const t=$('#impText');if(t){t.value=tpl;t.select()}toast('คัดลอกอัตโนมัติไม่ได้ ใส่ข้อความในกล่องแล้ว กด Ctrl+C')};
+        try{navigator.clipboard.writeText(tpl).then(()=>toast('คัดลอกหัวตารางแล้ว วางในแถวแรกของ Google Sheet ได้เลย','success'),fb)}catch(e){fb()}
+        break}
+      case 'imp-save':{
+        if(!pend||!pend.qs||!pend.qs.length)break;
+        const name=($('#impName').value.trim()||'ชุดที่นำเข้า').slice(0,60);
+        let ex=CUSTOM.find(x=>x.name===name);
+        if(ex)ex.qs=pend.qs;else{ex={id:'u'+Date.now().toString(36),builtin:false,name,subject:name,title:'สั่นกระดิ่งพิชิตชัย',indicator:'',qs:pend.qs};CUSTOM.push(ex)}
+        saveSets();useSet(ex.id,true);pend=null;closeOv();refreshAfterSetChange();
+        toast(`นำเข้า ${ex.qs.length} ข้อแล้ว ใช้ชุด “${name}”`,'success');break}
+      case 'full':toggleFull();break;
+      case 'next':advance();break;
+      case 'skip':skip();break;
+      case 'testsound':SFX.bell();break;
+    }
+    return;
+  }
+  const d=e.target.closest('[data-disp]');
+  if(d){
+    ensureAudio();const k=d.dataset.disp,v=d.dataset.val;
+    S[k]=k==='font'?+v:k==='sound'?v==='true':v;save();applyDisplay();syncDisp();renderTools();
+    if(k==='sound'&&S.sound)SFX.bell();
+    return;
+  }
+  const t=e.target.closest('[data-set]');
+  if(t){
+    const k=t.dataset.set,raw=t.dataset.val;
+    S[k]=['mode','order'].includes(k)?raw:+raw;
+    if(k==='players')renderNames();
+    save();syncSetup();return;
+  }
+  const df=e.target.closest('[data-diff]');
+  if(df){
+    const k=df.dataset.diff,i=S.diffs.indexOf(k);
+    if(i>-1){if(S.diffs.length>1)S.diffs.splice(i,1);else toast('ต้องเลือกอย่างน้อย 1 ระดับ','warning')}else S.diffs.push(k);
+    save();syncSetup();return;
+  }
+  const c=e.target.closest('.choice');
+  if(c&&G)pick(+c.dataset.i);
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='cMin'){const v=Math.round(+t.value);if(v>=1)S.minutes=Math.min(60,v);save();syncSetup()}
+  else if(t.id==='cQ'){const v=Math.round(+t.value);if(v>=1)S.questions=Math.min(QUESTIONS.length,v);save();syncSetup()}
+  else if(t.dataset&&t.dataset.name!==undefined){S.names[+t.dataset.name]=t.value.trim()||AV[+t.dataset.name].n;save()}
+  else if(t.id==='vol'){S.vol=+t.value;save();applyDisplay()}
+});
+document.addEventListener('keydown',e=>{
+  if(swalModalOpen())return;
+  if(e.target.matches&&e.target.matches('input,textarea,select'))return;
+  if(e.key==='Escape'){if(ovKind)closeOv();else togglePause();return}
+  if(!G||screenName!=='game'||G.paused||e.repeat)return;
+  ensureAudio();
+  if(G.mode==='bell'){const i=KEYC.indexOf(e.code);if(i>-1&&i<G.players.length){e.preventDefault();buzz(i);return}}
+  const m=/^(?:Digit|Numpad)([1-4])$/.exec(e.code);
+  if(m){pick(+m[1]-1);return}
+  if((e.code==='Space'||e.code==='Enter')&&G.phase==='feedback'){e.preventDefault();advance()}
+});
+document.addEventListener('change',async e=>{
+  if(e.target.id!=='impFile'||!e.target.files[0])return;
+  const f=e.target.files[0],nm=$('#impName');
+  if(nm&&!nm.value.trim())nm.value=f.name.replace(/\.[^.]+$/,'');
+  const rp=$('#impReport');if(rp)rp.innerHTML='<div class="rep">กำลังอ่านไฟล์…</div>';
+  try{runImport(await readFileRows(f))}
+  catch(err){if(rp)rp.innerHTML='<div class="rep bad">อ่านไฟล์ไม่ได้ ถ้าเป็น .xlsx ให้ตรวจว่าเชื่อมต่ออินเทอร์เน็ต หรือลองบันทึกเป็น .csv แล้วเลือกใหม่ หรือคัดลอกช่องแล้ววางแทน</div>'}
+  e.target.value='';
+});
+document.addEventListener('visibilitychange',()=>{lastT=performance.now()});
+
+applyDisplay();showSetup();
+</script>
