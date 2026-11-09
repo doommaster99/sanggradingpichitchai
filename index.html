@@ -381,8 +381,7 @@ details.rev summary{cursor:pointer; font:800 1.1rem var(--font-display)}
 
 /* ===== ภาพพื้นหลัง ===== */
 body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--bgimg) center/cover no-repeat;pointer-events:none;transition:opacity .4s}
-body[data-bg="home"]{--bgimg:url("img/home-bg.jpg")}
-body[data-bg="game"]{--bgimg:url("img/game-bg.jpg")}
+body[data-bg="home"],body[data-bg="game"]{--bgimg:url("img/game-bg.jpg")}
 body[data-bg="home"]::before{filter:blur(18px) saturate(1.1);transform:scale(1.08)}
 body[data-bg="home"]::after,body[data-bg="game"]::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.28))}
 :root[data-theme="dark"] body::after{background:linear-gradient(180deg,rgba(8,10,30,.35),rgba(8,10,30,.6))!important}
@@ -395,6 +394,22 @@ body[data-bg="home"]::after,body[data-bg="game"]::after{content:"";position:fixe
 .hero.banner .go:focus-visible{outline:3px solid #fff}
 .dlg .setc{grid-area:auto;padding:1rem 1.1rem;border:1px solid var(--line);border-radius:1.25rem;background:var(--fill);margin-bottom:.4rem}
 .dlg .setc .bigno{margin-left:auto}
+
+/* ===== โหมดเบา: ลดเอฟเฟกต์ให้ลื่นขึ้น ===== */
+*{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+:root{--glass:rgba(255,255,255,.80);--glass-2:rgba(255,255,255,.92);--glass-solid:rgba(255,255,255,.97);
+  --shadow:0 6px 18px -10px rgba(67,56,202,.35);--shadow-lg:0 10px 24px -12px rgba(67,56,202,.4)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--glass:rgba(24,30,70,.82);--glass-2:rgba(34,42,92,.90);--glass-solid:rgba(22,28,64,.97);
+  --shadow:0 6px 18px -10px rgba(0,0,0,.6);--shadow-lg:0 10px 24px -12px rgba(0,0,0,.65)}}
+:root[data-theme="dark"]{--glass:rgba(24,30,70,.82);--glass-2:rgba(34,42,92,.90);--glass-solid:rgba(22,28,64,.97);
+  --shadow:0 6px 18px -10px rgba(0,0,0,.6);--shadow-lg:0 10px 24px -12px rgba(0,0,0,.65)}
+body{background-attachment:scroll;background:var(--bg)}
+body[data-bg="home"]::before{filter:none;transform:none}
+.hero::before,.win::after{display:none}
+.game.paused .qcard,.game.paused .choices{filter:none;opacity:.15}
+#ov{background:rgba(15,23,42,.55)}
+.tbar i,.fbbar i{transition:none}
+.dash>*{animation-duration:.3s}
 </style>
 
 <div id="app">
@@ -863,6 +878,7 @@ function loop(now){
 function updateHud(){
   if(!G)return;
   const tm=$('#tm');if(!tm)return;
+  const hk=G.idx+'|'+(isFinite(G.timeLeft)?Math.floor(G.timeLeft*4):'i');if(G._hk===hk)return;G._hk=hk;
   tm.textContent=isFinite(G.timeLeft)?fmt(G.timeLeft):'∞';
   $('#tfill').style.width=isFinite(G.timeLeft)?(G.timeLeft/G.total*100)+'%':'100%';
   $('#ht').classList.toggle('low',isFinite(G.timeLeft)&&G.timeLeft<=10&&G.timeLeft>0);
