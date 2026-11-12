@@ -410,6 +410,8 @@ body[data-bg="home"]::before{filter:none;transform:none}
 #ov{background:rgba(15,23,42,.55)}
 .tbar i,.fbbar i{transition:none}
 .dash>*{animation-duration:.3s}
+.copy{grid-column:1/-1;text-align:center;font:600 .85rem var(--font-body);color:var(--ink);opacity:.85;margin:.4rem 0 0;padding:.5rem 1rem;justify-self:center;border-radius:999px;background:var(--glass)}
+.dlg .copy{background:none;opacity:.6;font-size:.8rem;margin:.9rem 0 0;padding:0;display:block}
 </style>
 
 <div id="app">
@@ -743,6 +745,7 @@ function gameRowsHTML(){return `
         <span class="hint">ปุ่มบนแป้นพิมพ์ใช้กดกระดิ่ง หรือจะแตะปุ่มบนหน้าจอสัมผัสก็ได้</span></div>
 `}
 function poolCount(){return QUESTIONS.filter(q=>S.diffs.includes(q.d)).length}
+const COPYRIGHT='© 2026 อุดม นุพันธ์. สงวนลิขสิทธิ์ทุกประการ';
 function setInfoHTML(){
   const st=activeSet();
   const lv={e:0,m:0,h:0};st.qs.forEach(q=>{lv[q.d]++});const tot=Math.max(1,st.qs.length);
@@ -777,6 +780,7 @@ function showSetup(){
       <button class="glass mode" type="button" role="radio" data-set="mode" data-val="solo"><span class="tick">${svg('check')}</span><span class="ic">${svg('user')}</span><b>เล่นคนเดียว</b><span class="d">ตอบคำถามทีละข้อ แข่งกับเวลา ระบบนับคะแนนให้</span></button>
       <button class="glass mode" type="button" role="radio" data-set="mode" data-val="bell"><span class="tick">${svg('check')}</span><span class="ic">${svg('bell')}</span><b>แข่งกดกระดิ่ง</b><span class="d">2–6 คนหรือทีม ใครกดก่อนได้สิทธิ์ตอบภายใน ${ANSWER_SECS} วินาที</span></button>
     </section>
+    <p class="copy">${COPYRIGHT}</p>
   </div>`;
   renderTools();syncSetup();
 }
@@ -1064,7 +1068,7 @@ function openOv(kind){
   const ov=$('#ov');let h='';
   if(kind==='pause')h=`<h2>${svg('pause')} หยุดชั่วคราว</h2><p>เวลาและคำถามหยุดนิ่งไว้ให้แล้ว</p><div class="acts"><button class="btn primary" data-act="resume" type="button">${svg('play')}เล่นต่อ</button><button class="btn" data-act="restart" type="button">${svg('restart')}เริ่มเกมใหม่</button><button class="btn" data-act="setup" type="button">กลับหน้าหลัก</button></div>`;
   if(kind==='restart')h=`<h2>เริ่มเกมใหม่?</h2><p>คะแนนและความคืบหน้าตอนนี้จะถูกล้าง แล้วเริ่มนับเวลาใหม่ด้วยการตั้งค่าเดิม</p><div class="acts"><button class="btn gold" data-act="restartgo" type="button">เริ่มใหม่เลย</button><button class="btn" data-act="resume" type="button">ยกเลิก</button></div>`;
-  if(kind==='game')h=`<h2>${svg('gear')} ตั้งค่าเกม</h2>${setInfoHTML()}${gameRowsHTML()}<div class="acts"><button class="btn primary" data-act="resume" type="button">เสร็จสิ้น</button></div>`;
+  if(kind==='game')h=`<h2>${svg('gear')} ตั้งค่าเกม</h2>${setInfoHTML()}${gameRowsHTML()}<div class="acts"><button class="btn primary" data-act="resume" type="button">เสร็จสิ้น</button></div><p class="copy">${COPYRIGHT}</p>`;
   if(kind==='bank')h=bankHTML();
   if(kind==='display')h=`<h2>${svg('type')} ตั้งค่าการแสดงผล</h2>
     <div class="row"><span class="lb">ขนาดตัวอักษร</span><div class="chips">${[[.9,'เล็ก'],[1,'ปกติ'],[1.2,'ใหญ่'],[1.4,'ใหญ่มาก']].map(([v,l])=>`<button class="chip" type="button" data-disp="font" data-val="${v}">${l}</button>`).join('')}</div></div>
